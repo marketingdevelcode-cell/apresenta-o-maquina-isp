@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Máquina ISP — Mobile Demo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="notch"></div>
+    <div class="home-indicator"></div>
+
+    <div class="phone-screen">
+      <!-- Status bar -->
+      <div class="status-bar" id="statusBar">
+        <span id="statusTime">9:41</span>
+        <div class="status-icons">
+          <svg viewBox="0 0 18 14" fill="white"><rect x="0" y="10" width="3" height="4" rx="0.5"/><rect x="5" y="7" width="3" height="7" rx="0.5"/><rect x="10" y="3" width="3" height="11" rx="0.5"/><rect x="15" y="0" width="3" height="14" rx="0.5"/></svg>
+          <svg viewBox="0 0 17 12" fill="white"><path d="M8.5 12a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM4.5 7.5l-2-2a8.5 8.5 0 0 1 12 0l-2 2a5.5 5.5 0 0 0-8 0zM0 3a13.5 13.5 0 0 1 17 0l-2 2a10.5 10.5 0 0 0-13 0L0 3z"/></svg>
+          <svg viewBox="0 0 25 13" fill="white"><rect x="0.5" y="0.5" width="21" height="12" rx="3" ry="3" stroke="white" stroke-width="1" fill="none" opacity="0.5"/><rect x="2" y="2" width="18" height="9" rx="1.5" ry="1.5" fill="white"/><rect x="22.5" y="3.5" width="2" height="6" rx="1" fill="white" opacity="0.5"/></svg>
+        </div>
+      </div>
+
+      <div class="screens">
+        <!-- LISTA DE CONVERSAS -->
+        <div class="screen screen-list" id="screenList">
+          <div class="list-header">
+            <h1>WhatsApp</h1>
+            <div class="list-header-actions">
+              <svg viewBox="0 0 24 24"><path d="M12 14.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM9 2L7.17 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3.17L15 2H9z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5 1.5-1.5-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+            </div>
+          </div>
+
+          <div class="search-bar-wrap">
+            <div class="search-bar">Pesquisar</div>
+          </div>
+
+          <div class="chat-list" id="chatList"></div>
+        </div>
+
+        <!-- CHAT -->
+        <div class="screen screen-chat" id="screenChat">
+          <div class="chat-header">
+            <button class="back-btn" id="backBtn">
+              <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </button>
+            <div class="avatar" id="chatAvatar"></div>
+            <div class="chat-header-info">
+              <div class="chat-header-name" id="chatHeaderName"></div>
+              <div class="chat-header-status" id="chatHeaderStatus">online</div>
+            </div>
+            <div class="chat-header-actions">
+              <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+            </div>
+          </div>
+
+          <div class="messages-area" id="messagesArea"></div>
+
+          <div class="input-area">
+            <div class="input-wrap">
+              <button class="icon-btn">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+              </button>
+              <input type="text" class="message-input" id="messageInput" placeholder="Mensagem" autocomplete="off"/>
+              <button class="icon-btn">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.816 15.556v.002c0 1.502.584 2.912 1.646 3.972s2.472 1.647 3.974 1.647a5.58 5.58 0 0 0 3.972-1.645l9.547-9.548c.769-.768 1.147-1.767 1.058-2.817-.079-.968-.548-1.927-1.319-2.698-1.594-1.592-4.068-1.711-5.517-.262l-7.916 7.915c-.881.881-.792 2.25.214 3.261.959.958 2.423 1.053 3.263.215l5.511-5.512c.28-.28.267-.722.053-.936l-.244-.244c-.191-.191-.567-.349-.957.04l-5.506 5.506c-.18.18-.635.127-.976-.214-.098-.097-.576-.613-.213-.973l7.915-7.917c.818-.817 2.267-.699 3.23.262.5.501.802 1.1.849 1.685.051.573-.156 1.111-.589 1.543l-9.547 9.549a3.97 3.97 0 0 1-2.829 1.171 3.975 3.975 0 0 1-2.83-1.173 3.973 3.973 0 0 1-1.172-2.828c0-1.071.415-2.076 1.172-2.83l7.209-7.211c.157-.157.264-.579.028-.814L11.5 4.36a.572.572 0 0 0-.834.018l-7.205 7.207a5.577 5.577 0 0 0-1.645 3.971z"/></svg>
+              </button>
+            </div>
+            <button class="send-btn" id="sendBtn">
+              <svg viewBox="0 0 24 24"><path d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="floating-reset hidden" id="resetBtn">↻ Reiniciar conversa</button>
+  </div>
+
+  <div class="help-hint">Ctrl + "+" pra aumentar o zoom · Ctrl + "-" pra diminuir</div>
+
+<script src="app.js"></script>
+</body>
+</html>
