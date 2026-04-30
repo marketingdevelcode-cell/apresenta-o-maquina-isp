@@ -968,6 +968,44 @@
             backdrop-filter: blur(10px);
             margin-top: 30px;
         }
+        .animated-border-pill {
+            position: relative;
+            display: inline-block;
+            border-radius: 99px;
+            padding: 1px; /* Border thickness */
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 87, 255, 0.15);
+        }
+
+        .animated-border-pill::before {
+            content: '';
+            position: absolute;
+            top: -1000px;
+            bottom: -1000px;
+            left: -1000px;
+            right: -1000px;
+            /* Um gradiente muito mais fino para parecer um ponto de luz com rastro, não um ponteiro */
+            background: conic-gradient(from 0deg, transparent 0%, transparent 85%, #0057FF 95%, #4BFF8A 100%);
+            animation: rotate-border 3s linear infinite;
+            z-index: 0;
+        }
+
+        .animated-border-pill-inner {
+            position: relative;
+            z-index: 1;
+            /* Fundo 100% sólido para ocultar completamente a "haste" do ponteiro por trás */
+            background: #060913; 
+            border-radius: 99px;
+            padding: 12px 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes rotate-border {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -979,19 +1017,32 @@
         <!-- SLIDE 1 — PROVOCAÇÃO -->
         <section class="slide slide-dark active" id="slide-1" data-title="Provocação">
             <div class="grid-bg grid-bg-dark"></div>
-            <div class="noise-overlay"></div>
-            <div class="glow-point" style="top: -10%; left: -10%;"></div>
-            <div class="glow-point" style="bottom: -10%; right: -10%; opacity: 0.1;"></div>
             
-            <div class="slide-content-wrapper" style="gap: 30px; justify-content: center; text-align: center;">
-                <img src="Logo Principal - Versão Branco - Azul.png" alt="Máquina.ISP" class="logo-main title-reveal" style="height: 50px; margin-bottom: 20px;">
-                <h1 class="title-reveal" style="max-width: 1200px; margin-bottom: 20px; line-height: 1.3; font-size: clamp(1.5rem, 3.5vw, 3rem);">
-                    Você trabalha todo dia.<br>
-                    <span style="color: var(--primary); text-shadow: 0 0 40px rgba(0, 87, 255, 0.4);">Seu provedor ainda depende de você para tudo.</span>
+            <!-- Hero Image Background -->
+            <div class="hero-bg-image title-reveal" style="position: absolute; top: 0; right: 0; bottom: 0; width: 80%; z-index: 0; opacity: 1; -webkit-mask-image: linear-gradient(to left, black 70%, transparent 100%); mask-image: linear-gradient(to left, black 70%, transparent 100%);">
+                <img src="images/imagem capa máquina isp - v1.png" style="width: 100%; height: 100%; object-fit: cover; object-position: bottom right;">
+            </div>
+
+            <div class="noise-overlay" style="z-index: 1;"></div>
+            <div class="glow-point" style="top: -10%; left: -10%; z-index: 1;"></div>
+            
+            <!-- Sombra focal para destacar o texto sobre a imagem -->
+            <div style="position: absolute; top: 45%; left: 40%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 30%, transparent 70%); transform: translate(-50%, -50%); z-index: 1; pointer-events: none;"></div>
+            
+            <div class="slide-content-wrapper" style="gap: 30px; justify-content: center; align-items: flex-start; text-align: left; padding-left: 5vw; width: 100%; z-index: 2; position: relative;">
+                <img src="images/Logo Principal - Versão Branco - Azul.png" alt="Máquina.ISP" class="logo-main title-reveal" style="height: 45px; margin-bottom: 20px;">
+                <h1 class="title-reveal" style="max-width: 900px; margin-bottom: 30px; line-height: 1.2; font-size: clamp(1.4rem, 2.4vw, 2.8rem);">
+                    VOCÊ TRABALHA TODO DIA.<br>
+                    <span style="color: var(--primary); text-shadow: 0 0 40px rgba(0, 87, 255, 0.4);">SEU PROVEDOR AINDA DEPENDE<br>DE VOCÊ PARA TUDO.</span>
                 </h1>
-                <p class="title-reveal font-mono" style="color: var(--primary); letter-spacing: 0.2em; font-size: clamp(0.9rem, 1.2vw, 1.2rem); opacity: 0.9; font-weight: 700; background: rgba(0, 87, 255, 0.1); padding: 12px 30px; border-radius: 99px; border: 1px solid rgba(0, 87, 255, 0.3); display: inline-block;">
-                    MÁQUINA.ISP — DO LEAD AO SUPORTE, TUDO NO AUTOMÁTICO
-                </p>
+                
+                <div class="title-reveal animated-border-pill">
+                    <div class="animated-border-pill-inner">
+                        <p class="font-mono" style="color: var(--primary); letter-spacing: 0.2em; font-size: clamp(0.7rem, 0.9vw, 1rem); font-weight: 700; margin: 0;">
+                            MÁQUINA.ISP — DO LEAD AO SUPORTE, TUDO NO AUTOMÁTICO
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1043,41 +1094,61 @@
             <div class="noise-overlay"></div>
             <div class="glow-point" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.3;"></div>
             
+            <style>
+                @keyframes spin { 100% { transform: rotate(360deg); } }
+                @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+                .orbital.node {
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0, 87, 255, 0.2);
+                    border: 1px solid rgba(0, 87, 255, 0.4);
+                    background: rgba(10, 20, 40, 0.8);
+                }
+                .orbital.node img {
+                    max-width: 65%;
+                    max-height: 65%;
+                    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+                }
+            </style>
+
             <div class="slide-content-wrapper" style="justify-content: space-evenly; padding-top: 80px;">
-                <h2 class="title-reveal text-center" style="max-width: 1000px; margin-bottom: 0;">Inteligência operando em cima dos seus sistemas.</h2>
+                <h2 class="title-reveal text-center" style="max-width: 1000px; margin-bottom: 20px;">Inteligência operando em cima dos seus sistemas.</h2>
                 
-                <div class="ecosystem-visual" style="transform: scale(0.85); opacity: 1; visibility: visible; margin: -20px 0;">
-                    <!-- Orbital Rings (SVG) -->
-                    <svg class="eco-rings-svg" width="600" height="600" viewBox="0 0 600 600">
-                        <circle cx="300" cy="300" r="100" class="eco-ring-circle" />
-                        <circle cx="300" cy="300" r="180" class="eco-ring-circle" opacity="0.6" />
-                        <circle cx="300" cy="300" r="260" class="eco-ring-circle" opacity="0.3" />
+                <div class="ecosystem-visual" style="width: 800px; height: 500px; position: relative; margin: 0 auto; transform: scale(0.9);">
+                    
+                    <!-- Neural Paths (SVG) -->
+                    <svg width="800" height="500" style="position: absolute; top:0; left:0; z-index: 1; overflow: visible;" id="neural-svg">
+                        <defs>
+                            <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <g id="eco-lines"></g>
+                        <g id="eco-particles"></g>
                     </svg>
 
-                    <!-- Lines (SVG) -->
-                    <svg width="500" height="500" style="position: absolute; top:0; left:0; z-index: 1;">
-                        <g id="eco-lines" opacity="0.6">
-                            <!-- Lines will be drawn here -->
-                        </g>
-                    </svg>
-
-                    <!-- Hub -->
-                    <div class="hub-icon">
-                        <img src="Design System Máquina ISP/artools/assets/images/logo icone 2.png" alt="Máquina.ISP" style="width: 80%; filter: drop-shadow(0 0 30px rgba(0, 87, 255, 0.6)); object-fit: contain;">
+                    <!-- Central Core Engine -->
+                    <div class="hub-icon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 5; width: 140px; height: 140px; display: flex; justify-content: center; align-items: center;">
+                        <div class="core-ring core-ring-1" style="position: absolute; width: 180px; height: 180px; border: 2px dashed rgba(0, 87, 255, 0.5); border-radius: 50%; animation: spin 20s linear infinite;"></div>
+                        <div class="core-ring core-ring-2" style="position: absolute; width: 230px; height: 230px; border: 3px solid rgba(75, 255, 138, 0.4); border-radius: 50%; border-top-color: transparent; border-bottom-color: transparent; animation: spin-reverse 15s linear infinite;"></div>
+                        <div class="core-ring core-ring-3" style="position: absolute; width: 140px; height: 140px; background: rgba(0, 20, 50, 0.95); border-radius: 50%; box-shadow: 0 0 60px rgba(0, 87, 255, 0.8); border: 2px solid rgba(0, 87, 255, 0.8); backdrop-filter: blur(10px);"></div>
+                        
+                        <img src="images/logo icone 2.png" alt="Máquina.ISP" style="width: 65%; position: relative; z-index: 2; filter: drop-shadow(0 0 20px rgba(0, 87, 255, 1)); object-fit: contain;">
+                        
+                        <div class="core-pulse" style="position: absolute; width: 140px; height: 140px; border-radius: 50%; border: 3px solid #4BFF8A; opacity: 0; z-index: 1;"></div>
                     </div>
 
-                    <!-- Orbitals -->
-                    <div class="orbital" data-angle="0"><img src="logo ixc soft.png" alt="IXC"></div>
-                    <div class="orbital" data-angle="51"><img src="logo sgp.png" alt="SGP"></div>
-                    <div class="orbital" data-angle="102"><img src="logo hubsoft.png" alt="Hubsoft"></div>
-                    <div class="orbital" data-angle="153"><img src="logo rd station.png" alt="RD Station"></div>
-                    <div class="orbital" data-angle="204"><img src="logo pipedrive.png" alt="Pipedrive"></div>
-                    <div class="orbital" data-angle="255"><img src="logo whatapp.png" alt="WhatsApp"></div>
-                    <div class="orbital" data-angle="306"><img src="logo planilha.png" alt="Planilha"></div>
+                    <!-- Neural Nodes -->
+                    <div class="orbital node" data-x="-320" data-y="-120"><img src="images/logo ixc soft.png" alt="IXC"></div>
+                    <div class="orbital node" data-x="-350" data-y="80"><img src="images/logo sgp.png" alt="SGP"></div>
+                    <div class="orbital node" data-x="-180" data-y="210"><img src="images/logo hubsoft.png" alt="Hubsoft" style="max-width: 80%; max-height: 80%;"></div>
+                    <div class="orbital node" data-x="180" data-y="210"><img src="images/logo rd station.png" alt="RD Station" style="max-width: 80%; max-height: 80%;"></div>
+                    <div class="orbital node" data-x="350" data-y="80"><img src="images/logo pipedrive.png" alt="Pipedrive" style="max-width: 80%; max-height: 80%;"></div>
+                    <div class="orbital node" data-x="320" data-y="-120"><img src="images/logo whatapp.png" alt="WhatsApp" style="max-width: 45%; max-height: 45%;"></div>
+                    <div class="orbital node" data-x="0" data-y="-210"><img src="images/logo planilha.png" alt="Planilha" style="max-width: 45%; max-height: 45%;"></div>
                 </div>
 
-                <p class="title-reveal mt-40 opacity-50 text-center" style="max-width: 600px; font-size: 14px;">
-                    Os agentes operam diretamente nos seus sistemas. Sem ferramenta paralela. Sem troca de plataforma.
+                <p class="title-reveal mt-40 text-center font-mono" style="max-width: 850px; font-size: 1.15rem; line-height: 1.6; color: white; background: rgba(10, 20, 40, 0.8); border: 1px solid rgba(0, 87, 255, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0, 87, 255, 0.2); padding: 15px 40px; border-radius: 50px; z-index: 10; position: relative; backdrop-filter: blur(10px);">
+                    Os agentes operam diretamente nos seus sistemas. <span style="color: var(--primary); font-weight: bold;">Sem ferramenta paralela. Sem troca de plataforma.</span>
                 </p>
             </div>
         </section>
@@ -1086,9 +1157,9 @@
         <section class="slide slide-light" id="slide-4" data-title="Metodologia (4 Dimensões)">
             <div class="grid-bg grid-bg-light"></div>
             <div class="slide-content-wrapper">
-                <h2 class="title-reveal mb-20 text-center" style="max-width: 1100px;">Uma metodologia construída para as 4 frentes que mais impactam o resultado do seu provedor.</h2>
+                <h2 class="title-reveal mb-20 text-center" style="max-width: 1200px; font-size: clamp(1.4rem, 1.8vw, 2.2rem); padding: 0 20px;">Uma metodologia construída para as 4 frentes que mais impactam o resultado do seu provedor.</h2>
                 
-                <div class="layout-grid-2x2" style="margin-top: 60px; gap: 40px;">
+                <div class="layout-grid-2x2" style="margin-top: 30px; gap: 20px;">
                     <div class="light-card title-reveal" style="background: rgba(0, 87, 255, 0.03); color: var(--text-dark); border: 1px solid rgba(0, 87, 255, 0.1); box-shadow: 0 15px 35px rgba(0, 87, 255, 0.05); backdrop-filter: blur(10px); transition: all 0.3s ease;">
                         <div class="border-beam"></div>
                         <i class="ph ph-funnel-simple dim-icon" style="font-size: 48px; color: var(--primary); margin-bottom: 20px; display: block; transition: transform 0.3s ease;"></i>
@@ -1115,7 +1186,7 @@
                     </div>
                 </div>
                 
-                <p class="title-reveal mt-40 font-mono" style="color: var(--primary); font-weight: 700; font-size: clamp(1rem, 1.3vw, 1.3rem); background: rgba(0, 87, 255, 0.1); padding: 10px 30px; border-radius: 50px;">Nenhuma depende do dono para funcionar.</p>
+                <p class="title-reveal mt-40 font-mono" style="color: var(--primary); font-weight: 700; font-size: clamp(0.85rem, 1vw, 1.1rem); background: rgba(0, 87, 255, 0.1); padding: 8px 25px; border-radius: 50px; margin-top: 30px;">Nenhuma depende do dono para funcionar.</p>
             </div>
         </section>
 
@@ -1136,7 +1207,7 @@
                         </ul>
                     </div>
                     <div class="split-right" style="display: flex; justify-content: center; align-items: center; position: relative; opacity: 0;">
-                        <video src="Vídeo TEO.mp4" muted playsinline autoplay id="agent-video-5" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
+                        <video src="videos/Vídeo TEO.mp4" muted playsinline autoplay id="agent-video-5" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
                         <div class="wa-phone" id="agent-chat-5" style="display: none; position: absolute; z-index: 6; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                             <div class="wa-screen">
                                 <div class="wa-status-bar"><span>9:41</span><span>▲▲▲ 🔋</span></div>
@@ -1175,7 +1246,7 @@
                         </ul>
                     </div>
                     <div class="split-right" style="display: flex; justify-content: center; align-items: center; position: relative; opacity: 0;">
-                        <video src="Vídeo LIA.mp4" muted playsinline autoplay id="agent-video-6" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
+                        <video src="videos/Vídeo LIA.mp4" muted playsinline autoplay id="agent-video-6" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
                         <div class="wa-phone" id="agent-chat-6" style="display: none; position: absolute; z-index: 6; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                             <div class="wa-screen">
                                 <div class="wa-status-bar"><span>9:41</span><span>▲▲▲ 🔋</span></div>
@@ -1214,7 +1285,7 @@
                         </ul>
                     </div>
                     <div class="split-right" style="display: flex; justify-content: center; align-items: center; position: relative; opacity: 0;">
-                        <video src="Vídeo gabi - entrando em cena.mp4" muted playsinline autoplay id="agent-video-7" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
+                        <video src="videos/Vídeo gabi - entrando em cena.mp4" muted playsinline autoplay id="agent-video-7" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
                         <div class="wa-phone" id="agent-chat-7" style="display: none; position: absolute; z-index: 6; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                             <div class="wa-screen">
                                 <div class="wa-status-bar"><span>9:41</span><span>▲▲▲ 🔋</span></div>
@@ -1254,7 +1325,7 @@
                         </ul>
                     </div>
                     <div class="split-right" style="display: flex; justify-content: center; align-items: center; position: relative; opacity: 0;">
-                        <video src="Vídeo NOAH.mp4" muted playsinline autoplay id="agent-video-8" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
+                        <video src="videos/Vídeo NOAH.mp4" muted playsinline autoplay id="agent-video-8" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
                         <div class="wa-phone" id="agent-chat-8" style="display: none; position: absolute; z-index: 6; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                             <div class="wa-screen">
                                 <div class="wa-status-bar"><span>9:41</span><span>▲▲▲ 🔋</span></div>
@@ -1284,8 +1355,8 @@
             <div class="glow-point" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.15;"></div>
 
             <div class="slide-content-wrapper">
-                <h1 class="title-reveal text-center" style="margin-bottom: 10px;">A Equação do ROI: <span style="color: var(--primary);">Fazer Mais com Menos</span></h1>
-                <p class="title-reveal text-center opacity-70" style="max-width: 800px; margin-bottom: 60px; font-size: 1.3rem;">Crescimento contínuo da sua base de assinantes sem precisar inchar o seu time operacional.</p>
+                <h1 class="title-reveal text-center" style="margin-bottom: 10px; font-size: clamp(1.8rem, 2.5vw, 3rem);">A Equação do ROI: <span style="color: var(--primary);">Fazer Mais com Menos</span></h1>
+                <p class="title-reveal text-center opacity-70" style="max-width: 800px; margin-bottom: 30px; font-size: 1.1rem;">Crescimento contínuo da sua base de assinantes sem precisar inchar o seu time operacional.</p>
                 
                 <div class="roi-equation-container title-reveal" style="align-items: flex-start;">
                     <!-- Left Side -->
@@ -1308,9 +1379,9 @@
                     </div>
 
                     <!-- Middle -->
-                    <div class="roi-equals" style="margin-top: 60px;">
-                        <div style="font-size: 48px; font-weight: 300; opacity: 0.5;">=</div>
-                        <i class="ph ph-arrow-bend-right-down" style="font-size: 24px; opacity: 0.3; margin-top: -10px;"></i>
+                    <div class="roi-equals" style="margin-top: 30px;">
+                        <div style="font-size: 36px; font-weight: 300; opacity: 0.5;">=</div>
+                        <i class="ph ph-arrow-bend-right-down" style="font-size: 20px; opacity: 0.3; margin-top: -10px;"></i>
                     </div>
 
                     <!-- Right Side -->
@@ -1392,8 +1463,129 @@
             </div>
         </section>
 
-        <!-- SLIDE 11 — IMPLANTAÇÃO -->
-        <section class="slide slide-light" id="slide-11" data-title="Implantação (4 Etapas)">
+        <!-- SLIDE 11 — CASE DX7 -->
+        <section class="slide slide-dark" id="slide-11" data-title="Case de Sucesso">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="noise-overlay"></div>
+            <div class="glow-point" style="top: 0%; left: 50%; transform: translate(-50%, -50%); opacity: 0.15;"></div>
+
+            <!-- Subtle background elements -->
+            <div class="glow-point" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1;"></div>
+
+            <div class="slide-content-wrapper" style="padding-top: 40px; justify-content: center;">
+                
+                <div class="title-reveal text-center mb-10">
+                    <span class="font-mono" style="color: var(--primary); font-size: 0.8rem; letter-spacing: 0.2em; background: rgba(0, 87, 255, 0.1); padding: 6px 20px; border-radius: 50px; border: 1px solid rgba(0, 87, 255, 0.3); display: inline-block;">CASE DE SUCESSO</span>
+                </div>
+                
+                <h2 class="title-reveal text-center mb-40" style="font-size: clamp(1.6rem, 2.2vw, 2.5rem); margin-bottom: 25px;">
+                    O impacto na prática: <span style="color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3);">Case LX7.</span>
+                </h2>
+
+                <div class="title-reveal" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 850px; margin: 0 auto;">
+                    
+                    <!-- Top Left: Cenário Anterior -->
+                    <div style="background: rgba(20, 10, 10, 0.6); border: 1px solid rgba(255, 75, 75, 0.2); border-radius: 20px; padding: 20px 15px; text-align: center; backdrop-filter: blur(10px);">
+                        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 15px; background: rgba(255,75,75,0.1); padding: 4px 12px; border-radius: 20px;">
+                            <div style="width: 6px; height: 6px; border-radius: 50%; background: #FF4B4B; box-shadow: 0 0 10px #FF4B4B;"></div>
+                            <span style="color: #FF4B4B; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Cenário Anterior</span>
+                        </div>
+                        
+                        <div style="margin-bottom: 10px;">
+                            <span style="display: block; color: white; font-size: 2.5rem; font-weight: 700; line-height: 1;">7</span>
+                            <span style="display: block; color: white; font-size: 0.9rem; font-weight: 600; margin-top: 5px; letter-spacing: 1px;">OPERADORES</span>
+                        </div>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; line-height: 1.4; margin: 0 auto; max-width: 250px;">Equipe focada em suporte N1 reativo. Gargalos de atendimento.</p>
+                    </div>
+
+                    <!-- Top Right: Máquina ISP -->
+                    <div style="background: rgba(10, 20, 30, 0.6); border: 1px solid rgba(0, 150, 255, 0.2); border-radius: 20px; padding: 20px 15px; text-align: center; backdrop-filter: blur(10px);">
+                        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 15px; background: rgba(0,150,255,0.1); padding: 4px 12px; border-radius: 20px;">
+                            <div style="width: 6px; height: 6px; border-radius: 50%; background: #0096FF; box-shadow: 0 0 10px #0096FF;"></div>
+                            <span style="color: #0096FF; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Com Máquina.ISP</span>
+                        </div>
+                        
+                        <div style="margin-bottom: 10px;">
+                            <span style="display: block; color: white; font-size: 2.5rem; font-weight: 700; line-height: 1;">4</span>
+                            <span style="display: block; color: white; font-size: 0.9rem; font-weight: 600; margin-top: 5px; letter-spacing: 1px;">OPERADORES</span>
+                        </div>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; line-height: 1.4; margin: 0 auto; max-width: 250px;">Operação 100% autônoma. Equipe livre para foco no estratégico.</p>
+                    </div>
+
+                    <!-- Bottom: Impacto Financeiro -->
+                    <div style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(10, 30, 20, 0.8) 0%, rgba(5, 15, 10, 0.9) 100%); border: 1px solid rgba(75, 255, 138, 0.3); border-radius: 20px; padding: 25px 20px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+                        
+                        <!-- Soft green glow inside the card -->
+                        <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 400px; height: 100px; background: #4BFF8A; filter: blur(100px); opacity: 0.15;"></div>
+
+                        <div style="position: relative; z-index: 2;">
+                            <div style="display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; background: rgba(75,255,138,0.1); padding: 8px 20px; border-radius: 20px;">
+                                <i class="ph ph-trend-up" style="color: #4BFF8A; font-size: 20px;"></i>
+                                <span style="color: #4BFF8A; font-size: 0.95rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600;">Receita Recuperada</span>
+                            </div>
+                            
+                            <div style="display: flex; align-items: baseline; justify-content: center; gap: 12px; margin-bottom: 15px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 1.5rem; font-weight: 300;">R$</span>
+                                <span class="counter-num" id="case-revenue" style="color: #4BFF8A; font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 800; line-height: 1; letter-spacing: -1px; text-shadow: 0 0 30px rgba(75,255,138,0.3);">0,00</span>
+                            </div>
+
+                            <p style="color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.4; margin: 0 auto; max-width: 650px;">
+                                A operação não apenas se pagou no primeiro mês, como gerou <strong style="color: #4BFF8A;">caixa novo e margem limpa</strong> de forma automatizada.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SLIDE 12 — PAINEL DE COMANDO -->
+        <section class="slide slide-light" id="slide-12" data-title="Painel de Comando">
+            <div class="grid-bg grid-bg-light"></div>
+            
+            <div class="slide-content-wrapper" style="width: 100%; max-width: 1400px; margin: 0 auto; padding-top: 40px; display: flex; flex-direction: column; align-items: center;">
+                <div class="title-reveal text-center mb-10">
+                    <span class="font-mono" style="color: var(--primary); font-size: 0.8rem; letter-spacing: 0.2em; background: rgba(0, 87, 255, 0.1); padding: 6px 20px; border-radius: 50px; border: 1px solid rgba(0, 87, 255, 0.3); display: inline-block;">CONTROLE TOTAL</span>
+                </div>
+                
+                <h2 class="title-reveal text-center mb-40" style="font-size: clamp(1.6rem, 2.2vw, 2.5rem); margin-bottom: 25px; font-weight: 700; color: var(--text-dark);">
+                    Toda a operação na palma da sua mão.
+                </h2>
+
+                <div class="dashboard-mockup-container title-reveal" style="position: relative; width: 100%; max-width: 1100px; height: 50vh; background: #ffffff; border-radius: 12px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05); overflow: hidden; display: flex; flex-direction: column;">
+                    
+                    <!-- Browser Window Header -->
+                    <div style="height: 40px; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 15px; gap: 8px;">
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #ff5f56;"></div>
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #ffbd2e;"></div>
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #27c93f;"></div>
+                        <div style="flex: 1; display: flex; justify-content: center;">
+                            <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 11px; font-family: var(--font-mono); color: #64748b; padding: 4px 120px; display: flex; align-items: center; gap: 8px;">
+                                <i class="ph ph-lock-key"></i> app.maquinaisp.com.br
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Screen Content -->
+                    <div style="position: relative; flex: 1; overflow: hidden; background: #f8fafc;" id="dashboard-screens">
+                        <img src="C:/Users/WesleyBiazusHardt/.gemini/antigravity/brain/df928f2e-760f-475d-b3e6-5be35baaf1ad/media__1777569930016.png" class="dash-screen" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; opacity: 1;">
+                        <img src="C:/Users/WesleyBiazusHardt/.gemini/antigravity/brain/df928f2e-760f-475d-b3e6-5be35baaf1ad/media__1777569952094.png" class="dash-screen" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; opacity: 0;">
+                        <img src="C:/Users/WesleyBiazusHardt/.gemini/antigravity/brain/df928f2e-760f-475d-b3e6-5be35baaf1ad/media__1777569972795.png" class="dash-screen" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; opacity: 0;">
+                    </div>
+
+                    <!-- Floating Indicator -->
+                    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); padding: 8px 16px; border-radius: 20px; z-index: 10;">
+                        <div class="dash-dot" style="width: 8px; height: 8px; border-radius: 50%; background: white; opacity: 1; transition: 0.3s;"></div>
+                        <div class="dash-dot" style="width: 8px; height: 8px; border-radius: 50%; background: white; opacity: 0.4; transition: 0.3s;"></div>
+                        <div class="dash-dot" style="width: 8px; height: 8px; border-radius: 50%; background: white; opacity: 0.4; transition: 0.3s;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 13 — IMPLANTAÇÃO -->
+        <section class="slide slide-light" id="slide-13" data-title="Implantação (4 Etapas)">
             <div class="grid-bg grid-bg-light"></div>
             <div class="slide-content-wrapper">
                 <h2 class="title-reveal mb-20 text-center">Sua operação no ar em 4 etapas.</h2>
@@ -1426,16 +1618,28 @@
             </div>
         </section>
 
-        <!-- SLIDE 12 — ENCERRAMENTO -->
-        <section class="slide slide-dark" id="slide-12" data-title="Encerramento">
+        <!-- SLIDE 14 — ENCERRAMENTO -->
+        <section class="slide slide-dark" id="slide-14" data-title="Encerramento">
             <div class="grid-bg grid-bg-dark"></div>
             <div class="noise-overlay"></div>
             <div class="glow-point" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.2;"></div>
             
-            <div class="slide-content-wrapper" style="justify-content: center;">
-                <img src="Logo Principal - Versão Branco - Azul.png" alt="Máquina.ISP" class="logo-main title-reveal" style="height: 80px; margin-bottom: 60px;">
-                <h1 class="title-reveal text-center" style="font-size: clamp(3rem, 5vw, 6.5rem); margin-bottom: 20px; text-shadow: 0 0 40px rgba(0, 87, 255, 0.5);">Instale a Máquina.</h1>
-                <p class="title-reveal font-mono mb-20 text-center" style="color: var(--primary); letter-spacing: 0.2em; font-size: clamp(1rem, 1.5vw, 1.8rem); opacity: 0.9; text-transform: uppercase;">
+            <!-- Hero Image Background -->
+            <div class="hero-bg-image title-reveal" style="position: absolute; top: 0; right: 0; bottom: 0; width: 80%; z-index: 0; opacity: 1; -webkit-mask-image: linear-gradient(to left, black 70%, transparent 100%); mask-image: linear-gradient(to left, black 70%, transparent 100%);">
+                <img src="images/Imagem final da apresentação.png" style="width: 100%; height: 100%; object-fit: cover; object-position: bottom right;">
+            </div>
+
+            <!-- Sombra focal para destacar o texto sobre a imagem -->
+            <div style="position: absolute; top: 45%; left: 40%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 30%, transparent 70%); transform: translate(-50%, -50%); z-index: 1; pointer-events: none;"></div>
+            
+            <div class="slide-content-wrapper" style="gap: 20px; justify-content: center; align-items: flex-start; text-align: left; padding-left: 5vw; width: 100%; z-index: 2; position: relative;">
+                <img src="images/Logo Principal - Versão Branco - Azul.png" alt="Máquina.ISP" class="logo-main title-reveal" style="height: 45px; margin-bottom: 20px;">
+                
+                <h1 class="title-reveal" style="max-width: 800px; margin-bottom: 10px; line-height: 1.2; font-size: clamp(1.2rem, 1.8vw, 2.2rem); text-shadow: 0 0 40px rgba(0, 87, 255, 0.5);">
+                    INSTALE A MÁQUINA.
+                </h1>
+                
+                <p class="title-reveal font-mono" style="color: var(--primary); letter-spacing: 0.1em; font-size: clamp(0.9rem, 1.1vw, 1.3rem); opacity: 0.9; text-transform: uppercase; max-width: 500px;">
                     Sua operação integrada, automatizada e em produção.
                 </p>
             </div>
@@ -1450,12 +1654,12 @@
         
         <header class="ui-header">
             <div class="logo">
-                <img src="Design System Máquina ISP/artools/assets/images/logo oficial máquina isp.png" alt="Máquina.ISP" id="header-logo" style="height: 32px;">
+                <img src="images/Logo Principal - Versão Branco - Azul.png" alt="Máquina.ISP" id="header-logo" style="height: 32px;">
             </div>
             
             <div class="ui-controls">
                 <div class="slide-counter">
-                    <span id="current-slide">01</span> / <span id="total-slides">12</span>
+                    <span id="current-slide">01</span> / <span id="total-slides">14</span>
                 </div>
                 <button class="btn-icon" id="btn-map" title="Mapa da Apresentação (M)">
                     <i class="ph ph-squares-four"></i>
@@ -1513,10 +1717,10 @@
             if (uiOverlay && headerLogo) {
                 if (slide.classList.contains('slide-light')) {
                     uiOverlay.classList.add('light-mode');
-                    headerLogo.src = "Design System Máquina ISP/artools/assets/images/logo oficial máquina isp.png";
+                    headerLogo.style.filter = 'brightness(0)';
                 } else {
                     uiOverlay.classList.remove('light-mode');
-                    headerLogo.src = "Logo Principal - Versão Branco - Azul.png";
+                    headerLogo.style.filter = 'none';
                 }
             }
             
@@ -1557,46 +1761,38 @@
                 if (index === 2) { // Ecosystem
                     try {
                         const hub = slide.querySelector('.hub-icon');
-                        const orbitals = slide.querySelectorAll('.orbital');
+                        const nodes = slide.querySelectorAll('.orbital.node');
                         const linesGroup = document.getElementById('eco-lines');
+                        const particlesGroup = document.getElementById('eco-particles');
                         if (linesGroup) linesGroup.innerHTML = ''; 
+                        if (particlesGroup) particlesGroup.innerHTML = ''; 
 
-                        // Pulse Rings
-                        gsap.to('.eco-ring-circle', {
-                            scale: 1.05,
-                            opacity: 0.8,
+                        // Core Pulse
+                        gsap.killTweensOf('.core-pulse');
+                        gsap.set('.core-pulse', { scale: 1, opacity: 1 });
+                        gsap.to('.core-pulse', {
+                            scale: 1.8,
+                            opacity: 0,
                             duration: 2,
                             repeat: -1,
-                            yoyo: true,
-                            ease: "sine.inOut",
-                            stagger: 0.3
+                            ease: "power2.out"
                         });
 
-                        // Pulse Hub Glow
-                        gsap.to('.hub-icon', {
-                            boxShadow: "0 0 80px rgba(0, 87, 255, 0.6), inset 0 0 30px rgba(255, 255, 255, 0.1)",
-                            duration: 1.5,
-                            repeat: -1,
-                            yoyo: true,
-                            ease: "sine.inOut"
-                        });
-
-                        if (hub) gsap.fromTo(hub, { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1, ease: "back.out(1.7)" });
+                        if (hub) {
+                            gsap.killTweensOf(hub);
+                            gsap.fromTo(hub, { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1, ease: "back.out(1.7)" });
+                        }
                         
-                        if (orbitals && orbitals.length > 0) {
-                            orbitals.forEach((orb, i) => {
-                                const angleAttr = orb.getAttribute('data-angle') || "0";
-                                const baseAngle = parseFloat(angleAttr) * (Math.PI / 180);
-                                const radius = 230; // Increased radius
+                        if (nodes && nodes.length > 0) {
+                            nodes.forEach((node, i) => {
+                                const tx = parseFloat(node.getAttribute('data-x'));
+                                const ty = parseFloat(node.getAttribute('data-y'));
                                 
-                                // Static placement
-                                const x = Math.cos(baseAngle) * radius;
-                                const y = Math.sin(baseAngle) * radius;
+                                gsap.killTweensOf(node);
+                                gsap.set(node, { x: tx, y: ty, opacity: 0, scale: 0, top: '50%', left: '50%', xPercent: -50, yPercent: -50 });
                                 
-                                gsap.set(orb, { x: x, y: y, opacity: 0, scale: 0 });
-                                
-                                // Entrance
-                                gsap.to(orb, { 
+                                // Node Entrance
+                                gsap.to(node, { 
                                     opacity: 1, 
                                     scale: 1, 
                                     duration: 0.8, 
@@ -1604,21 +1800,73 @@
                                     ease: "back.out(1.7)"
                                 });
 
-                                // Create Connection Line
-                                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                                line.setAttribute("class", "eco-line-path");
-                                line.setAttribute("x1", "250");
-                                line.setAttribute("y1", "250");
-                                line.setAttribute("x2", String(250 + x));
-                                line.setAttribute("y2", String(250 + y));
-                                linesGroup.appendChild(line);
-
-                                // Animate line flow
-                                gsap.to(line, {
-                                    strokeDashoffset: -40,
-                                    duration: 1.5,
+                                // Node Float
+                                gsap.to(node, {
+                                    y: ty + (Math.random() * 20 - 10),
+                                    duration: 2 + Math.random(),
                                     repeat: -1,
-                                    ease: "none"
+                                    yoyo: true,
+                                    ease: "sine.inOut",
+                                    delay: 1.5 + Math.random()
+                                });
+
+                                // Draw Path
+                                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                                const startX = 400; const startY = 250;
+                                const endX = 400 + tx; const endY = 250 + ty;
+                                
+                                // Curved logic
+                                const cp1X = startX + (endX - startX) * 0.5;
+                                const cp1Y = startY;
+                                const cp2X = startX + (endX - startX) * 0.5;
+                                const cp2Y = endY;
+
+                                const d = `M ${endX},${endY} C ${cp2X},${cp2Y} ${cp1X},${cp1Y} ${startX},${startY}`;
+                                
+                                path.setAttribute("d", d);
+                                path.setAttribute("fill", "none");
+                                path.setAttribute("stroke", "rgba(0, 87, 255, 0.4)");
+                                path.setAttribute("stroke-width", "2");
+                                path.setAttribute("stroke-dasharray", "8 8");
+                                linesGroup.appendChild(path);
+
+                                // Path Entrance
+                                const pathLength = path.getTotalLength() || 500; // fallback if getTotalLength fails
+                                gsap.set(path, { strokeDasharray: pathLength, strokeDashoffset: pathLength });
+                                gsap.to(path, { strokeDashoffset: 0, duration: 1.5, delay: 0.5 + (i*0.1), ease: "power2.out", onComplete: () => {
+                                    path.setAttribute("stroke-dasharray", "8 8");
+                                    gsap.fromTo(path, {strokeDashoffset: 0}, { strokeDashoffset: -16, duration: 1, repeat: -1, ease: "none" });
+                                }});
+
+                                // Data Particle
+                                const particle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                                particle.setAttribute("r", "5");
+                                particle.setAttribute("fill", "#4BFF8A");
+                                particle.setAttribute("filter", "url(#neon-glow)");
+                                particlesGroup.appendChild(particle);
+
+                                const pObj = { progress: 0 };
+                                gsap.to(pObj, {
+                                    progress: 1,
+                                    duration: 1.5 + Math.random(),
+                                    repeat: -1,
+                                    delay: 1 + (Math.random() * 2),
+                                    ease: "power1.inOut",
+                                    onUpdate: () => {
+                                        try {
+                                            // Flow from node (progress 0) to core (progress 1)
+                                            // Our path is drawn from node to core: M endX,endY C ... startX,startY
+                                            const pt = path.getPointAtLength(pObj.progress * pathLength);
+                                            particle.setAttribute("cx", pt.x);
+                                            particle.setAttribute("cy", pt.y);
+                                            
+                                            // Fade in at start, fade out at end
+                                            let alpha = 1;
+                                            if (pObj.progress < 0.1) alpha = pObj.progress * 10;
+                                            else if (pObj.progress > 0.9) alpha = (1 - pObj.progress) * 10;
+                                            particle.setAttribute("opacity", alpha);
+                                        } catch (e) {}
+                                    }
                                 });
                             });
                         }
@@ -1684,7 +1932,6 @@
             6: {
                 name: 'LIA', statusId: 'wa-status-6', messagesId: 'wa-messages-6',
                 script: [
-                    { sender: 'user', text: 'Oi LIA, vi que minha fatura venceu e não consegui pagar.' },
                     { sender: 'bot', text: 'Oi, Fernando! Tudo bem? 😊 Aqui é a LIA, assistente financeira da Máquina Fibra Internet.\n\nTô passando com carinho pra avisar que sua fatura de R$ 109,90 venceu no dia 10. Já são 3 dias de atraso.\n\nAconteceu algo que posso te ajudar a resolver?' },
                     { sender: 'user', text: 'Oi LIA, me desculpa... esqueci mesmo, esse mês apertou.' },
                     { sender: 'bot', text: 'Imagina, Fernando, acontece com todo mundo. 🙏 Obrigada por ser sincero comigo.\n\nVou te dar 2 opções pra você escolher:\n\n1️⃣ Deslocar o vencimento pra dia 20 (sem multa)\n2️⃣ Parcelar em 2x\n\nQual te atende melhor?' },
@@ -1949,7 +2196,44 @@
                 );
             }
 
-            if (index === 10 && typeof gsap !== 'undefined') { // Implantação
+            if (index === 10 && typeof gsap !== 'undefined') { // Case LX7
+                const rev = { val: 0 }; 
+                gsap.to(rev, { 
+                    val: 88000, 
+                    duration: 2.5, 
+                    ease: "power2.out", 
+                    delay: 0.8,
+                    onUpdate: () => {
+                        const el = document.getElementById('case-revenue');
+                        if (el) el.textContent = rev.val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    } 
+                });
+            }
+
+            if (index === 11 && typeof gsap !== 'undefined') { // Painel de Comando
+                const screens = slide.querySelectorAll('.dash-screen');
+                const dots = slide.querySelectorAll('.dash-dot');
+                if (screens.length > 0) {
+                    gsap.killTweensOf(screens);
+                    gsap.set(screens, { opacity: 0 });
+                    gsap.set(screens[0], { opacity: 1 });
+                    dots.forEach(d => d.style.opacity = '0.4');
+                    dots[0].style.opacity = '1';
+                    
+                    const tl = gsap.timeline({ repeat: -1 });
+                    tl.to({}, { duration: 3.5 }) // Wait 3.5s
+                      .to(screens[0], { opacity: 0, duration: 0.8, onStart: () => { dots[0].style.opacity='0.4'; dots[1].style.opacity='1'; } })
+                      .to(screens[1], { opacity: 1, duration: 0.8 }, "<")
+                      .to({}, { duration: 3.5 })
+                      .to(screens[1], { opacity: 0, duration: 0.8, onStart: () => { dots[1].style.opacity='0.4'; dots[2].style.opacity='1'; } })
+                      .to(screens[2], { opacity: 1, duration: 0.8 }, "<")
+                      .to({}, { duration: 3.5 })
+                      .to(screens[2], { opacity: 0, duration: 0.8, onStart: () => { dots[2].style.opacity='0.4'; dots[0].style.opacity='1'; } })
+                      .to(screens[0], { opacity: 1, duration: 0.8 }, "<");
+                }
+            }
+
+            if (index === 12 && typeof gsap !== 'undefined') { // Implantação
                 gsap.to('#step-progress', { width: '100%', duration: 2, ease: "power1.inOut" });
                 const steps = slide.querySelectorAll('.step-item');
                 steps.forEach((step, i) => {

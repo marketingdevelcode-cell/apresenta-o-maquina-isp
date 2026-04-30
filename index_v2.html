@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máquina.ISP | Apresentação Comercial v2.0</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/eb4cad40f0b3b7b5a55b185a44a4889f?family=Stereo+Gothic+W06+950" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['"Stereo Gothic W06 950"', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        bgDark: '#050A15',
+                        bgLight: '#F8FAFC',
+                        primary: '#0057FF',
+                        secondary: '#64748B',
+                        accentBlue: '#1A6BFF',
+                        void: '#02040A',
+                        panel: '#0A1225',
+                        border: 'rgba(0, 87, 255, 0.2)'
+                    },
+                    animation: {
+                        'float': 'float 8s ease-in-out infinite',
+                        'spin-slow': 'spin 15s linear infinite',
+                        'marquee': 'marquee 40s linear infinite',
+                        'draw': 'draw 1.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-15px)' } },
+                        marquee: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },
+                        draw: { 'to': { strokeDashoffset: '0' } }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        body {
+            background-color: theme('colors.bgDark');
+            color: white;
+            overflow: hidden; /* Slide Mode */
+        }
+
+        /* Presentation Framework */
+        .slides-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5vh 5vw;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        /* Noise & Grid Backgrounds */
+        .noise {
+            position: absolute;
+            inset: 0;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: -2;
+            background-size: 50px 50px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 87, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 87, 255, 0.05) 1px, transparent 1px);
+            mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+        }
+
+        /* Text Reveal Animation */
+        .text-reveal-wrapper {
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+
+        .text-reveal-content {
+            transform: translateY(110%);
+            opacity: 0;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+            display: block;
+        }
+
+        .slide.active .text-reveal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-500 { transition-delay: 0.5s; }
+
+        /* Beam Button */
+        .beam-button {
+            position: relative;
+            overflow: hidden;
+        }
+        .beam-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        .beam-button:hover::before { left: 100%; }
+
+        /* Flashlight Card */
+        .flashlight-card {
+            position: relative;
+            background: rgba(10, 18, 37, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid theme('colors.border');
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .flashlight-card::before {
+            content: "";
+            position: absolute;
+            inset: 0px;
+            background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(0, 87, 255, 0.15), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .flashlight-card:hover::before { opacity: 1; }
+
+        /* Marquee */
+        .marquee-container {
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+            width: 100vw;
+            position: absolute;
+            left: 0;
+        }
+        .marquee-content {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-around;
+            min-width: 100%;
+        }
+
+        /* AXIS Visual Graph Elements */
+        .draw-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+        .slide.active .draw-path {
+            animation: draw 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.5s;
+        }
+
+        /* UI Header */
+        .ui-header {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 30px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+        .ui-controls { pointer-events: auto; display: flex; gap: 10px; }
+        .slide-counter {
+            font-family: theme('fontFamily.mono');
+            font-size: 13px; font-weight: 700;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid theme('colors.border');
+            padding: 8px 16px; border-radius: 99px;
+            display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+        .slide-counter span { color: theme('colors.primary'); }
+
+        .btn-icon {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid theme('colors.border');
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: all 0.3s; color: white;
+        }
+        .btn-icon:hover { background: theme('colors.primary'); border-color: theme('colors.primary'); transform: scale(1.1); }
+
+        /* Blob Glow */
+        .glow-blob {
+            position: absolute;
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(0,87,255,0.15) 0%, transparent 60%);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Nav Controls */
+        .nav-controls {
+            position: fixed; top: 50%; left: 0; width: 100%;
+            transform: translateY(-50%);
+            display: flex; justify-content: space-between; padding: 0 20px;
+            pointer-events: none; z-index: 100;
+        }
+        .nav-btn { pointer-events: auto; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid theme('colors.border'); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s; backdrop-filter: blur(10px); }
+        .nav-btn:hover { background: theme('colors.primary'); }
+        
+        /* WhatsApp UI Base */
+        .wa-phone { width: 320px; background: #1a1a1c; border-radius: 36px; padding: 8px; box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1.5px #2c2c2e; }
+        .wa-screen { width: 100%; height: 500px; background: white; border-radius: 28px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+        .wa-header { background: #008069; padding: 12px 14px; display: flex; align-items: center; gap: 10px; color: white; }
+        .wa-avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); overflow: hidden; }
+        .wa-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .wa-messages { flex: 1; padding: 10px; background: #efeae2; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+        .wa-msg { max-width: 85%; padding: 6px 10px; border-radius: 8px; font-size: 12px; line-height: 1.4; color: #111b21; position: relative; animation: waMsgIn 0.3s ease-out; }
+        .wa-msg.bot { background: white; align-self: flex-start; border-top-left-radius: 0; }
+        .wa-msg.user { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
+        @keyframes waMsgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- UI Overlay -->
+    <header class="ui-header">
+        <div class="logo">
+            <img src="images/logo oficial máquina isp.png" alt="Máquina.ISP" id="header-logo" style="height: 32px; filter: drop-shadow(0 0 10px rgba(0,87,255,0.3));">
+        </div>
+        <div class="ui-controls">
+            <div class="slide-counter"><span id="current-slide">01</span> / <span id="total-slides">12</span></div>
+            <button class="btn-icon" id="btn-fullscreen" title="Tela Cheia (F)"><i class="ph ph-corners-out"></i></button>
+        </div>
+    </header>
+
+    <div class="nav-controls">
+        <div class="nav-btn" id="prev-btn"><i class="ph ph-arrow-left"></i></div>
+        <div class="nav-btn" id="next-btn"><i class="ph ph-arrow-right"></i></div>
+    </div>
+
+    <main class="slides-container" id="slides-container">
+
+        <!-- SLIDE 1: PROVOCAÇÃO (Hero) -->
+        <section class="slide active" id="slide-1" data-title="Provocação">
+            <div class="grid-bg"></div>
+            <div class="noise"></div>
+            <div class="glow-blob" style="top: -20%; left: -20%;"></div>
+            <div class="glow-blob" style="bottom: -20%; right: -20%; opacity: 0.5;"></div>
+            
+            <div class="text-center z-10 max-w-5xl mx-auto flex flex-col items-center">
+                <img src="images/Logo Principal - Versão Branco - Azul.png" alt="Logo" class="h-16 mb-12 opacity-0 gs-reveal">
+                
+                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl uppercase leading-[0.9] tracking-tighter mb-8 text-white">
+                    <span class="text-reveal-wrapper block"><span class="text-reveal-content">Você trabalha</span></span>
+                    <span class="text-reveal-wrapper block"><span class="text-reveal-content delay-100">todo dia.</span></span>
+                    <span class="text-reveal-wrapper block mt-4 text-primary" style="text-shadow: 0 0 40px rgba(0,87,255,0.4);">
+                        <span class="text-reveal-content delay-200">Seu provedor</span>
+                    </span>
+                    <span class="text-reveal-wrapper block text-primary" style="text-shadow: 0 0 40px rgba(0,87,255,0.4);">
+                        <span class="text-reveal-content delay-300">ainda depende de você.</span>
+                    </span>
+                </h1>
+                
+                <div class="mt-8 gs-reveal delay-500 opacity-0">
+                    <p class="font-mono text-primary border border-primary/30 bg-primary/10 px-8 py-3 rounded-full tracking-widest text-sm backdrop-blur-md">
+                        MÁQUINA.ISP — DO LEAD AO SUPORTE, TUDO NO AUTOMÁTICO
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: DORES -->
+        <section class="slide" id="slide-2" data-title="Dores da Operação">
+            <div class="grid-bg"></div>
+            <div class="noise"></div>
+            
+            <div class="max-w-7xl mx-auto w-full z-10">
+                <div class="text-center mb-16">
+                    <span class="font-mono text-primary text-sm tracking-widest uppercase mb-4 block opacity-0 gs-reveal">O Cenário Atual</span>
+                    <h2 class="font-display text-4xl md:text-6xl uppercase opacity-0 gs-reveal">O caos invisível do seu provedor</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="flashlight-card p-10 flex flex-col items-center text-center opacity-0 gs-reveal group cursor-default">
+                        <div class="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                            <iconify-icon icon="solar:users-group-rounded-bold-duotone" class="text-4xl text-primary"></iconify-icon>
+                        </div>
+                        <h3 class="font-display text-2xl uppercase mb-4">Vendas Frias</h3>
+                        <p class="text-gray-400 font-sans leading-relaxed">Leads que não convertem e equipe comercial apagando incêndio no suporte.</p>
+                    </div>
+
+                    <div class="flashlight-card p-10 flex flex-col items-center text-center opacity-0 gs-reveal group cursor-default" style="transition-delay: 0.1s;">
+                        <div class="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500">
+                            <iconify-icon icon="solar:wallet-money-bold-duotone" class="text-4xl text-primary"></iconify-icon>
+                        </div>
+                        <h3 class="font-display text-2xl uppercase mb-4">Inadimplência</h3>
+                        <p class="text-gray-400 font-sans leading-relaxed">Cobranças manuais ineficientes que corroem o fluxo de caixa mensal.</p>
+                    </div>
+
+                    <div class="flashlight-card p-10 flex flex-col items-center text-center opacity-0 gs-reveal group cursor-default" style="transition-delay: 0.2s;">
+                        <div class="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                            <iconify-icon icon="solar:settings-minimalistic-bold-duotone" class="text-4xl text-primary"></iconify-icon>
+                        </div>
+                        <h3 class="font-display text-2xl uppercase mb-4">Sistemas Soltos</h3>
+                        <p class="text-gray-400 font-sans leading-relaxed">ERP, WhatsApp e Marketing que não se comunicam. Tudo depende de humanos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: ECOSSISTEMA -->
+        <section class="slide" id="slide-3" data-title="Ecossistema">
+            <div class="grid-bg"></div>
+            <div class="noise"></div>
+            
+            <div class="flex flex-col md:flex-row items-center justify-between w-full max-w-7xl mx-auto z-10 gap-12">
+                <div class="flex-1 opacity-0 gs-reveal">
+                    <span class="font-mono text-primary text-sm tracking-widest uppercase mb-4 block">A Solução</span>
+                    <h2 class="font-display text-5xl lg:text-7xl uppercase mb-6 leading-tight">Conectando<br><span class="text-primary">Tudo.</span></h2>
+                    <p class="text-xl text-gray-400 font-sans max-w-lg mb-8">Nossa inteligência integra seu ERP, CRM e atendimento nativamente, transformando dados soltos em uma máquina de lucros operando 24/7.</p>
+                    <button class="beam-button px-8 py-4 bg-primary text-white font-mono uppercase tracking-widest text-sm rounded-full font-bold hover:bg-blue-600 transition-colors">
+                        Ver Arquitetura
+                    </button>
+                </div>
+
+                <div class="flex-1 relative w-[500px] h-[500px] flex-shrink-0 flex items-center justify-center opacity-0 gs-reveal mx-auto" style="transition-delay: 0.2s;">
+                    <!-- Core Glow -->
+                    <div class="absolute w-40 h-40 bg-primary/20 rounded-full blur-2xl animate-pulse-slow"></div>
+                    
+                    <!-- SVG Connections -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 500 500">
+                        <circle cx="250" cy="250" r="150" fill="none" stroke="rgba(0,87,255,0.2)" stroke-width="1" stroke-dasharray="4 4" class="animate-spin-slow" style="transform-origin: center;"></circle>
+                        <circle cx="250" cy="250" r="220" fill="none" stroke="rgba(0,87,255,0.1)" stroke-width="1" stroke-dasharray="2 6" class="animate-spin-slow" style="transform-origin: center; animation-direction: reverse;"></circle>
+                        <!-- Dynamic lines will be drawn here -->
+                        <path d="M250 250 L100 150" stroke="rgba(0,87,255,0.4)" stroke-width="2" class="draw-path" fill="none"/>
+                        <path d="M250 250 L400 150" stroke="rgba(0,87,255,0.4)" stroke-width="2" class="draw-path" fill="none"/>
+                        <path d="M250 250 L100 350" stroke="rgba(0,87,255,0.4)" stroke-width="2" class="draw-path" fill="none"/>
+                        <path d="M250 250 L400 350" stroke="rgba(0,87,255,0.4)" stroke-width="2" class="draw-path" fill="none"/>
+                        <path d="M250 250 L250 50" stroke="rgba(0,87,255,0.4)" stroke-width="2" class="draw-path" fill="none"/>
+                    </svg>
+
+                    <!-- Core Node -->
+                    <div class="w-32 h-32 rounded-3xl bg-panel border-2 border-primary shadow-[0_0_50px_rgba(0,87,255,0.4)] flex items-center justify-center z-10 relative">
+                        <img src="images/logo icone 2.png" class="w-16 h-auto" alt="Logo">
+                    </div>
+
+                    <!-- Orbitals -->
+                    <div class="absolute w-16 h-16 rounded-2xl bg-panel/80 border border-white/10 flex items-center justify-center backdrop-blur-md animate-float" style="top: 100px; left: 60px; animation-delay: 0s;">
+                        <img src="images/logo ixc soft.png" class="w-10" alt="IXC">
+                    </div>
+                    <div class="absolute w-16 h-16 rounded-2xl bg-panel/80 border border-white/10 flex items-center justify-center backdrop-blur-md animate-float" style="top: 100px; right: 60px; animation-delay: 1s;">
+                        <img src="images/logo hubsoft.png" class="w-10" alt="Hubsoft">
+                    </div>
+                    <div class="absolute w-16 h-16 rounded-2xl bg-panel/80 border border-white/10 flex items-center justify-center backdrop-blur-md animate-float" style="bottom: 100px; left: 60px; animation-delay: 2s;">
+                        <img src="images/logo sgp.png" class="w-10" alt="SGP">
+                    </div>
+                    <div class="absolute w-16 h-16 rounded-2xl bg-panel/80 border border-white/10 flex items-center justify-center backdrop-blur-md animate-float" style="bottom: 100px; right: 60px; animation-delay: 3s;">
+                        <img src="images/logo rd station.png" class="w-10" alt="RD">
+                    </div>
+                    <div class="absolute w-16 h-16 rounded-2xl bg-panel/80 border border-white/10 flex items-center justify-center backdrop-blur-md animate-float" style="top: 10px; left: 215px; animation-delay: 4s;">
+                        <img src="images/logo whatapp.png" class="w-8" alt="WA">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AGENT TEMPLATE (We'll render TEO for Slide 4 as an example of the new aesthetic) -->
+        <!-- SLIDE 4: AGENTE TEO -->
+        <section class="slide" id="slide-4" data-title="Agente Comercial">
+            <div class="grid-bg"></div><div class="noise"></div>
+            <div class="glow-blob" style="top: 50%; left: 0; transform: translateY(-50%); opacity: 0.3;"></div>
+
+            <div class="max-w-[1400px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 z-10">
+                <div class="col-span-1 lg:col-span-6 flex flex-col justify-center opacity-0 gs-reveal">
+                    <span class="font-mono text-primary border border-primary/30 bg-primary/10 px-4 py-1 rounded-full text-xs max-w-max mb-6">MÓDULO DE VENDAS</span>
+                    <h2 class="font-display text-6xl uppercase tracking-tighter mb-4 text-white">Agente <span class="text-primary">TEO</span></h2>
+                    <p class="text-xl text-gray-400 font-sans mb-10">Qualifica leads, consulta viabilidade técnica no mapa do ERP, oferece os planos e fecha o contrato. Tudo automático pelo WhatsApp.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xl"><i class="ph ph-map-pin"></i></div>
+                            <span class="font-sans text-lg">Consulta viabilidade e CEP em tempo real</span>
+                        </div>
+                        <div class="flex items-center gap-4 bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xl"><i class="ph ph-file-text"></i></div>
+                            <span class="font-sans text-lg">Gera contrato direto no ERP (IXC/Hubsoft)</span>
+                        </div>
+                        <div class="flex items-center gap-4 bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xl"><i class="ph ph-rocket"></i></div>
+                            <span class="font-sans text-lg">Upsell e Ofertas personalizadas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-1 lg:col-span-6 flex justify-center items-center opacity-0 gs-reveal delay-200 relative">
+                    <!-- WhatsApp Mockup -->
+                    <div class="wa-phone relative z-10">
+                        <div class="wa-screen">
+                            <div class="wa-header">
+                                <div class="wa-avatar bg-white"><img src="images/logo icone 2.png" class="p-1"></div>
+                                <div>
+                                    <div class="font-bold text-sm leading-tight">TEO - Máquina Fibra</div>
+                                    <div class="text-[10px] text-white/80">online</div>
+                                </div>
+                            </div>
+                            <div class="wa-messages" id="chat-teo">
+                                <!-- Messages injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decoration -->
+                    <div class="absolute -right-10 top-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 blur-3xl rounded-full z-0 pointer-events-none"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: CASE LX7 -->
+        <section class="slide" id="slide-5" data-title="Case de Sucesso">
+            <div class="grid-bg"></div><div class="noise"></div>
+            
+            <div class="w-full max-w-7xl mx-auto z-10">
+                <div class="text-center mb-16">
+                    <span class="font-mono text-primary text-sm tracking-widest uppercase mb-4 block opacity-0 gs-reveal">Resultados Reais</span>
+                    <h2 class="font-display text-5xl md:text-7xl uppercase opacity-0 gs-reveal">Case <span class="text-white">LX7 Telecom</span></h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-0 gs-reveal delay-200">
+                    <div class="col-span-1 lg:col-span-2 flashlight-card p-12 overflow-hidden relative group">
+                        <!-- BG Image -->
+                        <div class="absolute inset-0 bg-[url('images/ef331680-191f-411b-ab8d-5f7d8227d553.jpg')] bg-cover bg-center opacity-20 mix-blend-luminosity group-hover:scale-105 group-hover:opacity-30 transition-all duration-1000"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0A1225] to-transparent"></div>
+                        
+                        <div class="relative z-10 h-full flex flex-col justify-end">
+                            <h3 class="font-display text-3xl mb-4">Eficiência Operacional Extrema</h3>
+                            <p class="font-sans text-gray-300 text-lg max-w-lg mb-8">A LX7 substituiu atendimentos manuais por processos autônomos, reduzindo a folha de pagamento e aumentando a velocidade do suporte.</p>
+                            
+                            <div class="flex items-center gap-6">
+                                <div class="flex items-center gap-2 text-gray-400">
+                                    <iconify-icon icon="solar:users-group-rounded-bold" class="text-2xl text-red-400"></iconify-icon>
+                                    <span class="font-mono line-through">7 Atendentes</span>
+                                </div>
+                                <i class="ph ph-arrow-right text-primary"></i>
+                                <div class="flex items-center gap-2 text-white font-bold bg-primary/20 px-4 py-2 rounded-full border border-primary/30">
+                                    <iconify-icon icon="solar:user-bold" class="text-2xl text-primary"></iconify-icon>
+                                    <span class="font-mono">4 Atendentes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 flex flex-col gap-6">
+                        <div class="flashlight-card p-8 flex-1 flex flex-col justify-center items-center text-center">
+                            <span class="font-mono text-sm text-gray-400 mb-2">Economia Mensal</span>
+                            <div class="font-display text-5xl text-[#4BFF8A] mb-2" id="case-revenue">R$ 0,00</div>
+                            <div class="w-full bg-[#4BFF8A]/20 h-1 mt-4 rounded-full overflow-hidden"><div class="h-full bg-[#4BFF8A] w-full origin-left scale-x-0 draw-bar"></div></div>
+                        </div>
+                        <div class="flashlight-card p-8 flex-1 flex flex-col justify-center items-center text-center">
+                            <span class="font-mono text-sm text-gray-400 mb-2">Retorno de Investimento</span>
+                            <div class="font-display text-5xl text-primary mb-2">900%</div>
+                            <span class="text-xs text-gray-500 uppercase tracking-widest">ROI Comprovado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: ENCERRAMENTO -->
+        <section class="slide" id="slide-6" data-title="Encerramento">
+            <div class="grid-bg"></div><div class="noise"></div>
+            <div class="glow-blob" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.2;"></div>
+            
+            <!-- Marquee Background -->
+            <div class="absolute top-1/3 left-0 w-full opacity-5 pointer-events-none -rotate-6 scale-110">
+                <div class="marquee-container">
+                    <div class="marquee-content animate-marquee">
+                        <span class="font-display text-[15rem] uppercase mx-10 text-white whitespace-nowrap">MÁQUINA.ISP</span>
+                        <span class="font-display text-[15rem] uppercase mx-10 text-primary whitespace-nowrap">MÁQUINA.ISP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center z-10 max-w-4xl mx-auto">
+                <img src="images/Logo Principal - Versão Branco - Azul.png" alt="Máquina.ISP" class="h-20 mx-auto mb-10 opacity-0 gs-reveal">
+                <h1 class="font-display text-6xl md:text-8xl uppercase tracking-tighter mb-6 opacity-0 gs-reveal text-white" style="text-shadow: 0 0 40px rgba(0, 87, 255, 0.5);">Instale a <span class="text-primary">Máquina.</span></h1>
+                <p class="font-mono text-xl tracking-[0.2em] text-gray-400 uppercase opacity-0 gs-reveal delay-200">Sua operação integrada, automatizada e em produção.</p>
+                
+                <div class="mt-16 opacity-0 gs-reveal delay-300">
+                    <button class="group beam-button relative px-10 py-5 bg-white text-black rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-200 transition-all flex items-center justify-center gap-3 mx-auto shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)]">
+                        <span>Falar com Consultor</span>
+                        <iconify-icon icon="solar:arrow-right-bold-duotone" class="text-xl group-hover:translate-x-2 transition-transform"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Setup GSAP & Slide Logic
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        document.getElementById('total-slides').textContent = totalSlides.toString().padStart(2, '0');
+
+        function gotoSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            
+            // Out
+            const currentObj = slides[currentSlide];
+            gsap.to(currentObj, { opacity: 0, duration: 0.5, onComplete: () => {
+                currentObj.classList.remove('active');
+                currentObj.style.visibility = 'hidden';
+            }});
+
+            // In
+            currentSlide = index;
+            const nextObj = slides[currentSlide];
+            nextObj.style.visibility = 'visible';
+            nextObj.classList.add('active');
+            gsap.to(nextObj, { opacity: 1, duration: 0.8 });
+
+            document.getElementById('current-slide').textContent = (currentSlide + 1).toString().padStart(2, '0');
+
+            // Trigger internal animations
+            animateSlideElements(nextObj, currentSlide);
+        }
+
+        function animateSlideElements(slide, index) {
+            // Text Reveals
+            const reveals = slide.querySelectorAll('.gs-reveal');
+            if (reveals.length) {
+                gsap.fromTo(reveals, 
+                    { y: 30, opacity: 0, filter: 'blur(5px)' }, 
+                    { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, stagger: 0.1, ease: 'power3.out', delay: 0.2 }
+                );
+            }
+
+            // Slide Specific
+            if (index === 4) { // Case LX7
+                const revenue = { val: 0 };
+                gsap.to(revenue, {
+                    val: 88000,
+                    duration: 2.5,
+                    ease: "power3.out",
+                    delay: 0.6,
+                    onUpdate: function() {
+                        const el = document.getElementById('case-revenue');
+                        if (el) el.innerHTML = `R$ ${revenue.val.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+                    }
+                });
+                gsap.to('.slide.active .draw-bar', { scaleX: 1, duration: 1.5, ease: "power2.out", delay: 1 });
+            }
+
+            if (index === 3) { // Agente TEO
+                setTimeout(() => playWaChat(), 1000);
+            }
+        }
+
+        // WhatsApp Simulator Logic (Simplified for Demo)
+        let chatTimeout;
+        let msgTimeouts = [];
+        function playWaChat() {
+            const chat = document.getElementById('chat-teo');
+            if (!chat) return;
+            chat.innerHTML = '';
+            
+            clearTimeout(chatTimeout);
+            msgTimeouts.forEach(t => clearTimeout(t));
+            msgTimeouts = [];
+
+            const msgs = [
+                { sender: 'user', text: 'Oi, queria ver os planos.' },
+                { sender: 'bot', text: 'Olá! Aqui é o TEO da Máquina Fibra. 👋' },
+                { sender: 'bot', text: 'Para eu verificar a viabilidade, me envia seu CEP por favor?' },
+                { sender: 'user', text: '95010-000' },
+                { sender: 'bot', text: '🔍 Consultando no sistema...' },
+                { sender: 'bot', text: '✅ Viabilidade Confirmada! Temos fibra óptica no seu endereço.' }
+            ];
+
+            let step = 0;
+            function nextMsg() {
+                if(step >= msgs.length) return;
+                const m = msgs[step];
+                const div = document.createElement('div');
+                div.className = `wa-msg ${m.sender}`;
+                div.innerText = m.text;
+                chat.appendChild(div);
+                chat.scrollTop = chat.scrollHeight;
+                step++;
+                chatTimeout = setTimeout(nextMsg, m.sender === 'user' ? 800 : 1500);
+            }
+            nextMsg();
+        }
+
+        // Controls
+        document.getElementById('next-btn').addEventListener('click', () => gotoSlide(currentSlide + 1));
+        document.getElementById('prev-btn').addEventListener('click', () => gotoSlide(currentSlide - 1));
+        
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') gotoSlide(currentSlide + 1);
+            if (e.key === 'ArrowLeft') gotoSlide(currentSlide - 1);
+        });
+
+        document.getElementById('btn-fullscreen').addEventListener('click', () => {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        });
+
+        // Init
+        setTimeout(() => animateSlideElements(slides[0], 0), 100);
+
+        // Flashlight effect init
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.flashlight-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+    </script>
+</body>
+</html>
