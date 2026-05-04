@@ -4,31 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Máquina.ISP — A Força de Trabalho Digital para Provedores</title>
+    <title>Máquina.ISP | Apresentação Comercial</title>
 
-    <!-- Fonts & Icons -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;700&display=swap"
         rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://db.onlinewebfonts.com/c/eb4cad40f0b3b7b5a55b185a44a4889f?family=Stereo+Gothic+W06+950"
+        rel="stylesheet">
 
-    <!-- GSAP for Animations -->
+    <!-- Icons -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- GSAP for Smooth Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
 
     <style>
         :root {
-            --primary: #0057FF;
-            --primary-glow: rgba(0, 87, 255, 0.4);
-            --bg-dark: #060913;
+            --font-display: 'Stereo Gothic W06 950', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --bg-dark: #0A0A0C;
             --bg-light: #F8FAFC;
-            --text-light: #F8FAFC;
+            --primary: #0057FF;
+            --secondary: #64748B;
             --text-dark: #0F172A;
-            --font-display: 'Outfit', sans-serif;
-            --font-mono: 'JetBrains+Mono', monospace;
-            --slide-transition: 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+            --text-light: #F8FAFC;
+            --bg-surface: #F5F5F5;
+            --accent-blue: #1A6BFF;
         }
 
         * {
@@ -39,34 +46,35 @@
         }
 
         body {
-            font-family: var(--font-display);
-            background: var(--bg-dark);
+            font-family: var(--font-body);
+            background-color: var(--bg-dark);
             color: var(--text-light);
             overflow: hidden;
-            height: 100vh;
             width: 100vw;
+            height: 100vh;
+            line-height: 1.6;
         }
 
-        body.is-presenting {
-            cursor: none;
-        }
-
+        /* Presentation Framework */
         .slides-container {
-            position: relative;
             width: 100%;
             height: 100%;
+            position: relative;
         }
 
         .slide {
             position: absolute;
             inset: 0;
+            width: 100%;
+            height: 100%;
             opacity: 0;
             visibility: hidden;
-            transition: var(--slide-transition);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 5vw;
+            padding: 5vh 5vw;
             overflow: hidden;
         }
 
@@ -76,133 +84,90 @@
             z-index: 10;
         }
 
-        .slide.hidden-slide {
-            /* No visual indicator in the main flow unless in map mode */
-        }
-
-        .slide-dark {
-            background: var(--bg-dark);
-            color: var(--text-light);
-        }
-
-        .slide-light {
-            background: var(--bg-light);
-            color: var(--text-dark);
-        }
-
-        /* Background Graphics */
+        /* Background Patterns */
         .grid-bg {
             position: absolute;
             inset: 0;
-            z-index: 0;
             pointer-events: none;
-        }
-
-        .grid-bg-dark {
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+            z-index: -1;
         }
 
         .grid-bg-light {
-            background-image:
-                linear-gradient(rgba(0, 87, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 87, 255, 0.05) 1px, transparent 1px);
+            background-image: linear-gradient(to right, rgba(0, 87, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 87, 255, 0.04) 1px, transparent 1px);
             background-size: 50px 50px;
+        }
+
+        .grid-bg-dark {
+            background-image: linear-gradient(to right, rgba(0, 87, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 87, 255, 0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
         }
 
         .noise-overlay {
             position: absolute;
             inset: 0;
-            background: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.15;
-            z-index: 1;
+            opacity: 0.05;
             pointer-events: none;
-            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            z-index: -1;
         }
 
         .glow-point {
             position: absolute;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
             border-radius: 50%;
-            z-index: 1;
+            filter: blur(120px);
+            opacity: 0.25;
             pointer-events: none;
-            filter: blur(80px);
+            z-index: -1;
         }
 
-        /* UI Overlays */
+        /* Typography */
+        h1 {
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            margin-bottom: 1.5em;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+            margin-bottom: 1.2em;
+        }
+
+        h3 {
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+            font-size: clamp(1rem, 1.5vw, 1.4rem);
+            margin-bottom: 1em;
+        }
+
+        .title-reveal {
+            /* Default state is visible for resilience; JS will handle the entrance if loaded */
+            opacity: 1;
+        }
+
+        /* Navigation UI */
         .ui-overlay {
             position: fixed;
-            inset: 0;
-            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-
-        .ui-overlay.light-mode {
-            color: var(--text-dark);
-        }
-
-        .ui-header {
-            position: absolute;
-            top: 40px;
-            left: 5vw;
-            right: 5vw;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            pointer-events: auto;
-        }
-
-        .ui-controls {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .slide-counter {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            letter-spacing: 0.2em;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 8px 16px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 700;
-        }
-
-        .btn-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            pointer-events: auto;
-        }
-
-        .btn-icon:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 87, 255, 0.3);
-            color: white;
-        }
-
-        .btn-icon.is-hidden {
-            background: rgba(255, 75, 75, 0.1);
-            border-color: rgba(255, 75, 75, 0.3);
-            color: #FF4B4B;
+            z-index: 100;
         }
 
         .progress-bar-container {
@@ -211,217 +176,585 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .progress-bar {
             height: 100%;
             background: var(--primary);
             width: 0%;
-            transition: width 0.4s ease;
-            box-shadow: 0 0 15px var(--primary);
+            transition: width 0.3s ease;
         }
 
-        /* Typography & Layout */
-        .slide-content-wrapper {
-            position: relative;
-            z-index: 10;
+        .ui-header {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 1400px;
+            padding: 2vh 4vw;
             display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-
-        h1 {
-            font-size: clamp(2.5rem, 5vw, 5rem);
-            font-weight: 800;
-            line-height: 0.95;
-            letter-spacing: -0.04em;
-            text-transform: uppercase;
-        }
-
-        h2 {
-            font-size: clamp(2rem, 4vw, 3.5rem);
-            font-weight: 800;
-            line-height: 1;
-            letter-spacing: -0.03em;
-        }
-
-        h3 {
-            font-family: var(--font-mono);
-            font-size: 14px;
-            color: var(--primary);
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .font-mono {
-            font-family: var(--font-mono);
-        }
-
-        .layout-split {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 80px;
+            justify-content: space-between;
             align-items: center;
+            pointer-events: auto;
+            z-index: 1000;
+            opacity: 0.4;
+            transition: opacity 0.4s ease;
         }
 
-        .layout-grid-2x2 {
+        .ui-header:hover {
+            opacity: 1;
+        }
+
+        .ui-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .light-mode .btn-icon {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-dark);
+        }
+
+        .light-mode .btn-icon:hover {
+            color: white;
+        }
+
+        /* Slide Map Overlay */
+        .slide-map-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            padding: 5vh 8vw;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .slide-map-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .slide-map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .slide-map-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            overflow-y: auto;
+            padding-bottom: 40px;
         }
 
-        /* Components */
-        .glass-panel {
+        .map-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+        }
+
+        .map-item.is-hidden {
+            opacity: 0.4;
+            border-style: dashed;
+        }
+
+        .map-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .map-item.current {
+            border-color: var(--primary);
+            background: rgba(0, 87, 255, 0.1);
+        }
+
+        .map-eye-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            z-index: 10;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .map-eye-btn:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .map-eye-btn.is-hidden {
+            color: #ff4b4b;
+        }
+
+        .map-num {
+            font-family: var(--font-mono);
+            color: var(--primary);
+            font-size: 12px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .map-title {
+            font-family: var(--font-display);
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        /* Slide Hidden State */
+        .slide.hidden-slide {
+            filter: grayscale(1) blur(2px);
+            opacity: 0.4 !important;
+        }
+
+        .slide.hidden-slide::after {
+            content: 'OCULTO NA APRESENTAÇÃO';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 75, 75, 0.2);
+            border: 2px solid #ff4b4b;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            letter-spacing: 0.2em;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            pointer-events: none;
+        }
+
+        body.is-presenting .slide.hidden-slide {
+            display: none !important;
+        }
+
+        #btn-toggle-eye.is-hidden {
+            color: #ff4b4b;
+            border-color: rgba(255, 75, 75, 0.4);
+            background: rgba(255, 75, 75, 0.1);
+        }
+
+        .slide-counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.1em;
+        }
+
+        .slide-counter span {
+            color: var(--primary);
+        }
+
+        .glass-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
             padding: 40px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
 
         .light-card {
-            background: white;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 87, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 87, 255, 0.05);
             border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(0, 87, 255, 0.05);
-            transition: all 0.4s ease;
+            padding: 40px;
+            color: var(--text-dark);
             position: relative;
             overflow: hidden;
+            z-index: 1;
         }
 
-        .light-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 87, 255, 0.1);
-            border-color: var(--primary);
-        }
-
-        /* Border Beam Effect */
-        .border-beam-container {
+        .glass-card>*,
+        .light-card>*,
+        .pain-card>*,
+        .sangramento-card>* {
             position: relative;
+            z-index: 2;
         }
 
         .border-beam {
             position: absolute;
             inset: 0;
+            z-index: 1 !important;
+            border-radius: 24px;
             border: 2px solid transparent;
-            border-radius: inherit;
-            background: linear-gradient(90deg, var(--primary), #4BFF8A, var(--primary)) border-box;
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
+            background: linear-gradient(var(--bg-light), var(--bg-light)) padding-box,
+                conic-gradient(from var(--angle), transparent 0%, var(--primary) 20%, transparent 40%) border-box;
+            --angle: 0deg;
+            animation: rotate-beam 4s linear infinite;
         }
 
-        .light-card:hover .border-beam,
-        .sangramento-card:hover .border-beam {
-            opacity: 1;
-            animation: border-beam-flow 3s linear infinite;
+        .slide-dark .border-beam {
+            background: linear-gradient(var(--bg-dark), var(--bg-dark)) padding-box,
+                conic-gradient(from var(--angle), transparent 0%, var(--primary) 20%, transparent 40%) border-box;
         }
 
-        @keyframes border-beam-flow {
-            0% {
-                background-position: 0% 50%;
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rotate-beam {
+            from {
+                --angle: 0deg;
             }
 
-            100% {
-                background-position: 200% 50%;
+            to {
+                --angle: 360deg;
             }
         }
 
-        /* Ecosystem Visual */
+        /* Specific Layouts */
+        .layout-grid-2x2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .border-beam-container {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .layout-split {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .split-left {
+            flex: 1.2;
+        }
+
+        .split-left h2 {
+            color: var(--primary);
+            margin-bottom: 0.5em;
+        }
+
+        .split-left h3 {
+            opacity: 0.6;
+            margin-bottom: 2em;
+        }
+
+        .topics-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: clamp(1.1rem, 1.3vw, 1.4rem);
+            line-height: 1.4;
+        }
+
+        .check-bullet {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 18px;
+            color: var(--primary);
+            background: transparent;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .check-bullet.active {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(0, 87, 255, 0.3);
+        }
+
+        /* Slide Styles */
+        .slide-dark {
+            background: radial-gradient(circle at center, #050E25 0%, #020617 70%, #000000 100%);
+            color: var(--text-light);
+        }
+
+        .slide-light {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .slide-content-wrapper {
+            width: 100%;
+            height: 100%;
+            max-width: 1600px;
+            max-height: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            position: relative;
+            padding: 120px 60px 60px 60px;
+            /* Increased top padding to avoid header */
+        }
+
+        /* 1920x1080 Container Logic */
+        .slide {
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Logo and Assets */
+        .logo-main {
+            height: 50px;
+            margin-bottom: 20px;
+            object-fit: contain;
+        }
+
+        .agent-image {
+            width: 100%;
+            height: auto;
+            border-radius: 24px;
+            filter: contrast(1.1);
+        }
+
+        video[id^="agent-video-"] {
+            border-radius: 20px;
+            object-fit: cover;
+            mask-image: radial-gradient(circle, black 65%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle, black 65%, transparent 100%);
+        }
+
+        /* Interactive Elements */
+        .btn-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 99px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 87, 255, 0.2);
+            font-size: 0.8rem;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0, 87, 255, 0.3);
+        }
+
+        /* Ecosystem Animation */
+        .ecosystem-visual {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .hub-icon {
-            filter: drop-shadow(0 0 30px rgba(0, 87, 255, 0.4));
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+            width: 140px;
+            height: 140px;
+            box-shadow: 0 0 50px rgba(0, 87, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Ecosystem Rings */
+        .eco-rings-svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .eco-ring-circle {
+            fill: none;
+            stroke: rgba(0, 87, 255, 0.2);
+            stroke-width: 1;
+            stroke-dasharray: 4 4;
+            transform-origin: center;
+        }
+
+        .eco-line-path {
+            fill: none;
+            stroke: rgba(0, 87, 255, 0.6);
+            stroke-width: 3;
+            stroke-dasharray: 10 10;
         }
 
         .orbital {
             position: absolute;
-            width: 75px;
-            height: 75px;
-            border-radius: 22px;
-            background: white;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            z-index: 2;
-            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .orbital:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 87, 255, 0.4);
         }
 
         .orbital img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 65px;
+            height: 65px;
             object-fit: contain;
         }
 
         /* WhatsApp Mockup */
         .wa-phone {
-            width: 290px;
-            height: 580px;
-            background: #000;
-            border-radius: 40px;
-            padding: 10px;
-            border: 8px solid #1a1a1a;
-            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.4);
-            position: relative;
-            overflow: hidden;
+            width: 336px;
+            background: #1a1a1c;
+            border-radius: 36px;
+            padding: 8px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 0 0 1.5px #2c2c2e;
+            flex-shrink: 0;
         }
 
         .wa-screen {
             width: 100%;
-            height: 100%;
-            background: #efe7de;
-            /* Background image like WhatsApp would be nice */
-            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-            background-size: contain;
-            border-radius: 30px;
+            height: 576px;
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            position: relative;
         }
 
         .wa-status-bar {
-            height: 24px;
-            padding: 0 20px;
+            height: 28px;
+            background: #008069;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 14px;
             font-size: 10px;
             font-weight: 600;
-            color: #555;
+            color: white;
+            flex-shrink: 0;
         }
 
         .wa-header {
-            background: #f0f2f5;
-            color: #111b21;
-            padding: 10px 12px;
+            background: #008069;
+            padding: 6px 10px 8px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            gap: 8px;
+            flex-shrink: 0;
         }
 
         .wa-avatar {
-            width: 38px;
-            height: 38px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: #dfe5e7;
+            background: rgba(255, 255, 255, 0.2);
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-shrink: 0;
         }
 
         .wa-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: top;
         }
 
         .wa-header-info {
@@ -429,43 +762,41 @@
         }
 
         .wa-header-name {
+            font-size: 13px;
             font-weight: 600;
-            font-size: 14px;
-            color: #111b21;
+            color: white;
+            line-height: 1.2;
         }
 
         .wa-header-status {
-            font-size: 11px;
-            color: #667781;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .wa-header-status.typing {
-            color: #00a884;
-            font-weight: 500;
+            font-style: italic;
         }
 
         .wa-messages {
             flex: 1;
-            padding: 12px;
+            overflow: hidden;
+            padding: 8px;
+            background: #efeae2;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='%23000' fill-opacity='0.025'><path d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/></g></svg>");
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            overflow-y: auto;
-            scrollbar-width: none;
-        }
-
-        .wa-messages::-webkit-scrollbar {
-            display: none;
+            gap: 2px;
         }
 
         .wa-msg {
-            max-width: 85%;
-            padding: 6px 9px 8px;
+            max-width: 82%;
+            padding: 5px 8px 4px;
             border-radius: 7.5px;
-            font-size: 12.5px;
-            line-height: 1.5;
-            position: relative;
-            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+            font-size: 11.5px;
+            line-height: 1.35;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.1);
             animation: waMsgIn 0.2s ease-out;
             position: relative;
         }
@@ -563,9 +894,9 @@
             padding: 40px;
             border-radius: 40px;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow:
-                inset 0 0 50px rgba(0, 0, 0, 0.6),
-                0 20px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 
+                inset 0 0 50px rgba(0,0,0,0.6),
+                0 20px 40px rgba(0,0,0,0.3);
             backdrop-filter: blur(10px);
             position: relative;
         }
@@ -576,7 +907,7 @@
             inset: 0;
             border-radius: 40px;
             padding: 1px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent, rgba(255, 184, 0, 0.2));
+            background: linear-gradient(180deg, rgba(255,255,255,0.1), transparent, rgba(255,184,0,0.2));
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
@@ -598,7 +929,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
         .calc-btn:hover {
@@ -616,14 +947,13 @@
             padding: 20px 50px;
             min-width: 350px;
             position: relative;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
         }
 
         #calc-input {
             background: transparent;
             border: none;
-            color: #FFD700;
-            /* Vibrant Gold for the main number */
+            color: #FFD700; /* Vibrant Gold for the main number */
             font-family: var(--font-display);
             font-size: 82px;
             text-align: center;
@@ -655,8 +985,7 @@
         }
 
         .pricing-card-v2 {
-            background: rgba(13, 18, 30, 0.98);
-            /* Deeper, more opaque navy */
+            background: rgba(13, 18, 30, 0.98); /* Deeper, more opaque navy */
             backdrop-filter: blur(40px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 36px;
@@ -677,8 +1006,7 @@
         }
 
         .pricing-card-v2.highlight {
-            border: 2px solid #FFD700;
-            /* Solid gold border as per image */
+            border: 2px solid #FFD700; /* Solid gold border as per image */
             background: rgba(13, 18, 30, 0.98);
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.2);
         }
@@ -718,8 +1046,7 @@
             font-size: 15px;
             text-transform: uppercase;
             letter-spacing: 0.25em;
-            color: #00D1FF;
-            /* Vibrant Blue/Cyan as requested */
+            color: #00D1FF; /* Vibrant Blue/Cyan as requested */
             margin-bottom: 25px;
             font-weight: 800;
         }
@@ -745,8 +1072,7 @@
         }
 
         .highlight .pricing-value {
-            color: #FFD700;
-            /* Brighter gold */
+            color: #FFD700; /* Brighter gold */
             text-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 184, 0, 0.2);
             font-weight: 900;
         }
@@ -754,8 +1080,7 @@
         .pricing-subtext {
             font-size: 16px;
             color: #FFFFFF;
-            opacity: 0.7;
-            /* Increased from 0.6 */
+            opacity: 0.7; /* Increased from 0.6 */
             font-family: var(--font-body);
             letter-spacing: 0.02em;
             font-weight: 500;
@@ -771,8 +1096,7 @@
         }
 
         .badge-v2 {
-            background: #4BFF8A;
-            /* Neon Green as requested */
+            background: #4BFF8A; /* Neon Green as requested */
             color: #000;
             padding: 10px 28px;
             border-radius: 12px;
@@ -1082,14 +1406,12 @@
             inset: 0;
             background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(25px);
-            z-index: 10000;
-            /* Extremely high to be on top of everything */
+            z-index: 10000; /* Extremely high to be on top of everything */
             display: none;
             flex-direction: column;
             padding: 80px 60px;
             overflow-y: auto;
-            pointer-events: auto;
-            /* Ensure it receives clicks */
+            pointer-events: auto; /* Ensure it receives clicks */
         }
 
         .slide-map-overlay.active {
@@ -1686,8 +2008,7 @@
             </style>
 
             <div class="slide-content-wrapper" style="justify-content: space-evenly; padding-top: 80px;">
-                <h2 class="title-reveal text-center" style="max-width: 1000px; margin-bottom: 20px;">Inteligência
-                    operando em cima dos seus sistemas.</h2>
+                <h2 class="title-reveal text-center" style="max-width: 1000px; margin-bottom: 20px;">Inteligência operando em cima dos seus sistemas.</h2>
 
                 <div class="ecosystem-visual"
                     style="width: 800px; height: 500px; position: relative; margin: 0 auto; transform: scale(0.9);">
@@ -1742,11 +2063,8 @@
                             alt="Planilha" style="max-width: 45%; max-height: 45%;"></div>
                 </div>
 
-                <p class="title-reveal mt-40 text-center font-mono"
-                    style="max-width: 850px; font-size: 1.15rem; line-height: 1.6; color: white; background: rgba(10, 20, 40, 0.8); border: 1px solid rgba(0, 87, 255, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0, 87, 255, 0.2); padding: 15px 40px; border-radius: 50px; z-index: 10; position: relative; backdrop-filter: blur(10px);">
-                    Os agentes operam diretamente nos seus sistemas. <span
-                        style="color: var(--primary); font-weight: bold;">Sem ferramenta paralela. Sem troca de
-                        plataforma.</span>
+                <p class="title-reveal mt-40 text-center font-mono" style="max-width: 850px; font-size: 1.15rem; line-height: 1.6; color: white; background: rgba(10, 20, 40, 0.8); border: 1px solid rgba(0, 87, 255, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0, 87, 255, 0.2); padding: 15px 40px; border-radius: 50px; z-index: 10; position: relative; backdrop-filter: blur(10px);">
+                    Os agentes operam diretamente nos seus sistemas. <span style="color: var(--primary); font-weight: bold;">Sem ferramenta paralela. Sem troca de plataforma.</span>
                 </p>
             </div>
         </section>
@@ -1924,8 +2242,7 @@
                 <div class="infographic-container title-reveal"
                     style="display: flex; justify-content: space-around; width: 100%; max-width: 1200px; margin-top: 40px;">
 
-                    <div class="info-item"
-                        style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                    <div class="info-item" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
                         <div style="position: relative; width: 280px; height: 280px;">
                             <svg width="280" height="280" viewBox="0 0 280 280" style="transform: rotate(-90deg);">
                                 <circle cx="140" cy="140" r="125" fill="none" stroke="rgba(255,255,255,0.05)"
@@ -1942,12 +2259,10 @@
                                         id="benefit-1">0</span>%</div>
                             </div>
                         </div>
-                        <h3 style="opacity: 0.9; text-align: center; font-size: 1.2rem; line-height: 1.3;">Redução
-                            da<br>inadimplência</h3>
+                        <h3 style="opacity: 0.9; text-align: center; font-size: 1.2rem; line-height: 1.3;">Redução da<br>inadimplência</h3>
                     </div>
 
-                    <div class="info-item"
-                        style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                    <div class="info-item" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
                         <div style="position: relative; width: 280px; height: 280px;">
                             <svg width="280" height="280" viewBox="0 0 280 280" style="transform: rotate(-90deg);">
                                 <circle cx="140" cy="140" r="125" fill="none" stroke="rgba(255,255,255,0.05)"
@@ -1964,12 +2279,10 @@
                                         id="benefit-2">0</span>%</div>
                             </div>
                         </div>
-                        <h3 style="opacity: 0.9; text-align: center; font-size: 1.2rem; line-height: 1.3;">Redução
-                            do<br>churn</h3>
+                        <h3 style="opacity: 0.9; text-align: center; font-size: 1.2rem; line-height: 1.3;">Redução do<br>churn</h3>
                     </div>
 
-                    <div class="info-item"
-                        style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                    <div class="info-item" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
                         <div style="position: relative; width: 280px; height: 280px;">
                             <svg width="280" height="280" viewBox="0 0 280 280" style="transform: rotate(-90deg);">
                                 <circle cx="140" cy="140" r="125" fill="none" stroke="rgba(255,255,255,0.05)"
@@ -1986,8 +2299,7 @@
                                         id="benefit-3">0</span>%</div>
                             </div>
                         </div>
-                        <h3 style="opacity: 0.9; text-align: center; font-size: 1.2rem; line-height: 1.3;">Aumento
-                            da<br>base ativa</h3>
+                        <h3 style="opacity: 0.9; text-align: center; font-size: 1.2rem; line-height: 1.3;">Aumento da<br>base ativa</h3>
                     </div>
 
                 </div>
@@ -2063,29 +2375,25 @@
                     <div class="step-item title-reveal" id="step-1">
                         <div class="step-num">01</div>
                         <h3 style="margin-bottom: 10px;">Mapeamento</h3>
-                        <p class="opacity-50" style="font-size: clamp(0.9rem, 1.1vw, 1.15rem); line-height: 1.5;">
-                            Reunião de onboarding,
+                        <p class="opacity-50" style="font-size: clamp(0.9rem, 1.1vw, 1.15rem); line-height: 1.5;">Reunião de onboarding,
                             diagnóstico da operação e escopo de integrações.</p>
                     </div>
                     <div class="step-item title-reveal" id="step-2">
                         <div class="step-num">02</div>
                         <h3 style="margin-bottom: 10px;">Integração</h3>
-                        <p class="opacity-50" style="font-size: clamp(0.9rem, 1.1vw, 1.15rem); line-height: 1.5;">
-                            Conexão via API com os
+                        <p class="opacity-50" style="font-size: clamp(0.9rem, 1.1vw, 1.15rem); line-height: 1.5;">Conexão via API com os
                             sistemas do provedor e configuração dos fluxos.</p>
                     </div>
                     <div class="step-item title-reveal" id="step-3">
                         <div class="step-num">03</div>
                         <h3 style="margin-bottom: 10px;">Calibração</h3>
-                        <p class="opacity-50" style="font-size: clamp(0.9rem, 1.1vw, 1.15rem); line-height: 1.5;">
-                            Treinamento com fluxos
+                        <p class="opacity-50" style="font-size: clamp(0.9rem, 1.1vw, 1.15rem); line-height: 1.5;">Treinamento com fluxos
                             reais, ajuste de scripts e regras de negócio.</p>
                     </div>
                     <div class="step-item title-reveal" id="step-4">
                         <div class="step-num">04</div>
                         <h3 style="margin-bottom: 10px;">Go Live</h3>
-                        <p class="opacity-50" style="font-size: clamp(0.9rem, 1.1vw, 1.15rem); line-height: 1.5;">
-                            Agentes ativos,
+                        <p class="opacity-50" style="font-size: clamp(0.9rem, 1.1vw, 1.15rem); line-height: 1.5;">Agentes ativos,
                             monitoramento e dashboard em tempo real.</p>
                     </div>
                 </div>
@@ -2130,17 +2438,17 @@
                         <h3 class="title-reveal mb-20" style="opacity: 0.7;">Agente de Vendas</h3>
                         <ul class="topics-list">
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Atende leads no momento da chegada (WhatsApp,
-                                site, indicação)</li>
+                                         class="ph ph-check"></i></span> Atende leads no momento da chegada (WhatsApp,
+                                 site, indicação)</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Qualifica leds conforme perfil e viabilidade
+                                         class="ph ph-check"></i></span> Qualifica leds conforme perfil e viabilidade
                             </li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Valida cobertura técnica direto no ERP</li>
+                                         class="ph ph-check"></i></span> Valida cobertura técnica direto no ERP</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Envia proposta personalizada</li>
+                                         class="ph ph-check"></i></span> Envia proposta personalizada</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Conduz até a assinatura digital do contrato</li>
+                                         class="ph ph-check"></i></span> Conduz até a assinatura digital do contrato</li>
                         </ul>
                     </div>
                     <div class="split-right"
@@ -2184,13 +2492,13 @@
                         <h3 class="title-reveal mb-20" style="opacity: 0.7;">Agente de Cobrança</h3>
                         <ul class="topics-list">
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Executa régua de cobrança inteligente</li>
+                                         class="ph ph-check"></i></span> Executa régua de cobrança inteligente</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Negocia parcelamentos e condições</li>
+                                         class="ph ph-check"></i></span> Negocia parcelamentos e condições</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Realiza desbloqueios de confiança</li>
+                                         class="ph ph-check"></i></span> Realiza desbloqueios de confiança</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Acompanha até a quitação</li>
+                                         class="ph ph-check"></i></span> Acompanha até a quitação</li>
                         </ul>
                     </div>
                     <div class="split-right"
@@ -2234,13 +2542,13 @@
                         <h3 class="title-reveal mb-20" style="opacity: 0.7;">Agente de Suporte</h3>
                         <ul class="topics-list">
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Triagem e resolução de primeiro nível</li>
+                                         class="ph ph-check"></i></span> Triagem e resolução de primeiro nível</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Automatiza pesquisas de NPS</li>
+                                         class="ph ph-check"></i></span> Automatiza pesquisas de NPS</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Mantém histórico unificado</li>
+                                         class="ph ph-check"></i></span> Mantém histórico unificado</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Encaminha ao humano apenas exceções</li>
+                                         class="ph ph-check"></i></span> Encaminha ao humano apenas exceções</li>
                         </ul>
                     </div>
                     <div class="split-right"
@@ -2285,13 +2593,13 @@
                         <h3 class="title-reveal mb-20" style="opacity: 0.7;">Agente de Retenção</h3>
                         <ul class="topics-list">
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Recebe solicitação de cancelamento</li>
+                                         class="ph ph-check"></i></span> Recebe solicitação de cancelamento</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Conduz retenção estruturada</li>
+                                         class="ph ph-check"></i></span> Conduz retenção estruturada</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Identifica causa raiz e contraoferta</li>
+                                         class="ph ph-check"></i></span> Identifica causa raiz e contraoferta</li>
                             <li class="topic-item topic-reveal"><span class="check-bullet"><i
-                                        class="ph ph-check"></i></span> Registra desfecho automatizado</li>
+                                         class="ph ph-check"></i></span> Registra desfecho automatizado</li>
                         </ul>
                     </div>
                     <div class="split-right"
@@ -2333,13 +2641,10 @@
             <div class="slide-content-wrapper">
                 <div class="calc-container">
                     <div class="title-reveal" style="margin-bottom: 10px;">
-                        <h2
-                            style="font-size: clamp(2.5rem, 5vw, 4.5rem); margin-bottom: 10px; line-height: 1; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase;">
-                            QUANTO CUSTA<br>PARA A SUA <span
-                                style="color: #FFD700; text-shadow: 0 0 40px rgba(255, 215, 0, 0.4);">OPERAÇÃO?</span>
+                        <h2 style="font-size: clamp(2.5rem, 5vw, 4.5rem); margin-bottom: 10px; line-height: 1; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase;">
+                            QUANTO CUSTA<br>PARA A SUA <span style="color: #FFD700; text-shadow: 0 0 40px rgba(255, 215, 0, 0.4);">OPERAÇÃO?</span>
                         </h2>
-                        <p class="opacity-70" style="font-size: 1.2rem; font-weight: 300;">Crescimento previsível
-                            atrelado ao ganho direto de eficiência e rentabilidade.</p>
+                        <p class="opacity-70" style="font-size: 1.2rem; font-weight: 300;">Crescimento previsível atrelado ao ganho direto de eficiência e rentabilidade.</p>
                     </div>
 
                     <!-- Enhanced Counter Group -->
@@ -2354,18 +2659,15 @@
 
                     <!-- Split Pricing Cards -->
                     <div class="pricing-grid-v2" style="margin: 0 auto;">
-
+                        
                         <!-- Monthly Licensing Card -->
                         <div class="pricing-card-v2 highlight title-reveal">
                             <span class="pricing-label">Licenciamento Mensal</span>
                             <div class="pricing-value">
                                 <span class="old-price-v2" id="calc-old-price">R$ 3.121</span>
-                                <span id="calc-monthly"
-                                    style="color: #FFD700; text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);">R$
-                                    2.653</span>
+                                <span id="calc-monthly" style="color: #FFD700; text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);">R$ 2.653</span>
                             </div>
-                            <p class="pricing-subtext" id="calc-range-text" style="margin-bottom: 15px;">Faixa: 1 a
-                                4.999 assinantes</p>
+                            <p class="pricing-subtext" id="calc-range-text" style="margin-bottom: 15px;">Faixa: 1 a 4.999 assinantes</p>
                             <div class="badge-v2">CONDIÇÃO ESPECIAL FEIRA</div>
                         </div>
 
@@ -2377,8 +2679,7 @@
                                 R$ 6.000
                             </div>
                             <p class="pricing-subtext">Onboarding + Integração Completa</p>
-                            <div
-                                style="margin-top: 25px; font-family: var(--font-mono); font-size: 12px; color: #fff; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 8px 20px; border-radius: 12px;">
+                            <div style="margin-top: 25px; font-family: var(--font-mono); font-size: 12px; color: #fff; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 8px 20px; border-radius: 12px;">
                                 Investimento Único
                             </div>
                         </div>
@@ -2473,7 +2774,7 @@
 
         function compileSlides() {
             const isPresenting = document.body.classList.contains('is-presenting');
-
+            
             // Save current slide reference to maintain position
             const currentSlide = slides[currentSlideIndex];
 
@@ -2506,18 +2807,18 @@
         function updateDOM() {
             if (totalSlidesEl) totalSlidesEl.textContent = String(totalSlides).padStart(2, '0');
             if (currentSlideEl) currentSlideEl.textContent = String(currentSlideIndex + 1).padStart(2, '0');
-
+            
             const progress = totalSlides > 1 ? (currentSlideIndex / (totalSlides - 1)) * 100 : 100;
             if (progressBar) progressBar.style.width = `${progress}%`;
 
             // Reset all slides state
             domSlides.forEach(s => s.classList.remove('active'));
-
+            
             // Activate current slide
             const activeSlide = slides[currentSlideIndex];
             if (activeSlide) {
                 activeSlide.classList.add('active');
-
+                
                 // Handle UI Color (Light/Dark mode)
                 const headerLogo = document.getElementById('header-logo');
                 if (uiOverlay && headerLogo) {
@@ -2539,7 +2840,7 @@
             const btn = document.getElementById('btn-toggle-eye');
             const activeSlide = slides[currentSlideIndex];
             if (!btn || !activeSlide) return;
-
+            
             const isHidden = activeSlide.classList.contains('hidden-slide');
             if (isHidden) {
                 btn.classList.add('is-hidden');
@@ -2641,7 +2942,7 @@
 
             gsap.killTweensOf(cards);
             gsap.set(cards, { opacity: 0, y: 40, filter: 'blur(12px)', scale: 0.95 });
-
+            
             gsap.to(cards, {
                 opacity: 1,
                 y: 0,
@@ -2745,8 +3046,8 @@
                 gsap.fromTo(hub, { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1, ease: "back.out(1.7)" });
             }
 
-            const centerX = 400;
-            const centerY = 250;
+            const centerX = 400; 
+            const centerY = 250; 
 
             nodes.forEach((node, i) => {
                 const tx = parseFloat(node.getAttribute('data-x'));
@@ -2829,17 +3130,17 @@
                 gsap.killTweensOf(screens);
                 gsap.set(screens, { opacity: 0 }); gsap.set(screens[0], { opacity: 1 });
                 dots.forEach(d => d.style.opacity = '0.4'); if (dots[0]) dots[0].style.opacity = '1';
-
+                
                 const tl = gsap.timeline({ repeat: -1 });
                 tl.to({}, { duration: 3.5 })
-                    .to(screens[0], { opacity: 0, duration: 0.8, onStart: () => { if (dots[0]) dots[0].style.opacity = '0.4'; if (dots[1]) dots[1].style.opacity = '1'; } })
-                    .to(screens[1], { opacity: 1, duration: 0.8 }, "<")
-                    .to({}, { duration: 3.5 })
-                    .to(screens[1], { opacity: 0, duration: 0.8, onStart: () => { if (dots[1]) dots[1].style.opacity = '0.4'; if (dots[2]) dots[2].style.opacity = '1'; } })
-                    .to(screens[2], { opacity: 1, duration: 0.8 }, "<")
-                    .to({}, { duration: 3.5 })
-                    .to(screens[2], { opacity: 0, duration: 0.8, onStart: () => { if (dots[2]) dots[2].style.opacity = '0.4'; if (dots[0]) dots[0].style.opacity = '1'; } })
-                    .to(screens[0], { opacity: 1, duration: 0.8 }, "<");
+                  .to(screens[0], { opacity: 0, duration: 0.8, onStart: () => { if (dots[0]) dots[0].style.opacity = '0.4'; if (dots[1]) dots[1].style.opacity = '1'; } })
+                  .to(screens[1], { opacity: 1, duration: 0.8 }, "<")
+                  .to({}, { duration: 3.5 })
+                  .to(screens[1], { opacity: 0, duration: 0.8, onStart: () => { if (dots[1]) dots[1].style.opacity = '0.4'; if (dots[2]) dots[2].style.opacity = '1'; } })
+                  .to(screens[2], { opacity: 1, duration: 0.8 }, "<")
+                  .to({}, { duration: 3.5 })
+                  .to(screens[2], { opacity: 0, duration: 0.8, onStart: () => { if (dots[2]) dots[2].style.opacity = '0.4'; if (dots[0]) dots[0].style.opacity = '1'; } })
+                  .to(screens[0], { opacity: 1, duration: 0.8 }, "<");
             }
         }
 
@@ -2863,34 +3164,34 @@
             const video = slide.querySelector('video');
             const chatOverlay = slide.querySelector('.wa-phone');
             const rightContainer = slide.querySelector('.split-right');
-
+            
             if (video && chatOverlay && rightContainer && typeof gsap !== 'undefined') {
                 // Reset states
                 chatOverlay.style.display = 'none';
-
+                
                 // 1. Entrance Animation for Container
-                gsap.fromTo(rightContainer,
+                gsap.fromTo(rightContainer, 
                     { opacity: 0, x: 20, filter: 'blur(10px)' },
                     { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.6, ease: "power2.out" }
                 );
-
+                
                 // Entrance Animation for Video
-                gsap.fromTo(video,
+                gsap.fromTo(video, 
                     { opacity: 0, scale: 0.98, filter: 'blur(10px)' },
                     { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.8, ease: "power2.out" }
                 );
-
+                
                 video.play().catch(e => console.warn("Play failed:", e));
-
+                
                 // 2. Play and then Blur Out
                 setTimeout(() => {
                     if (!slide.classList.contains('active')) return;
-
-                    gsap.to(video, {
-                        opacity: 0,
-                        filter: 'blur(32px)',
+                    
+                    gsap.to(video, { 
+                        opacity: 0, 
+                        filter: 'blur(32px)', 
                         scale: 1.1,
-                        duration: 0.8,
+                        duration: 0.8, 
                         onComplete: () => {
                             video.style.opacity = '0';
                             chatOverlay.style.display = 'block';
@@ -2935,54 +3236,46 @@
 
         // --- WhatsApp Mockup Logic ---
         const WA_AGENTS = {
-            11: {
-                name: 'TEO', messagesId: 'wa-messages-11', statusId: 'wa-status-11', script: [
-                    { sender: 'user', text: 'Olá, gostaria de informações sobre os planos de internet da Máquina Fibra.' },
-                    { sender: 'bot', text: 'Oi! Seja bem-vindo 👋 Aqui é o TEO, assistente comercial da Máquina Fibra Internet.\n\nEm menos de 1 minuto eu verifico se temos cobertura aí e te mostro o melhor plano pra sua casa.' },
-                    { sender: 'user', text: 'Oi TEO! Sou o Carlos. Meu CEP é 95010-000.' },
-                    { sender: 'bot', text: '✅ Ótima notícia! Seu endereço tá dentro da nossa área de fibra óptica premium.' },
-                    { sender: 'bot', text: '💎 *1 GIGA FIBRA PREMIUM*\nR$ 139,90/mês\n\n✓ Velocidade máxima garantida\n✓ Wi-Fi 6 de última geração\n\nTopa fechar?' },
-                    { sender: 'user', text: 'Acho que 1 GIGA é muito pra mim. Tem algo mais em conta?' },
-                    { sender: 'bot', text: '🎯 Entendi! Deixa eu te mostrar uma opção que encaixa exatamente no que você precisa:\n\n🔸 *500 MEGA FIBRA*\nR$ 109,90/mês\n\nFaz mais sentido pro seu bolso?' },
-                    { sender: 'user', text: 'Gostei desse!' },
-                    { sender: 'bot', text: 'Boa! 🎯 E olha que notícia boa: Como você tá fechando hoje, eu consigo liberar:\n\n✨ *1 ANO DE AMAZON PRIME GRATUITO*\n\nPosso travar essa oferta no seu cadastro?' },
-                    { sender: 'user', text: 'Com certeza!' },
-                    { sender: 'bot', text: '🎉 PRONTO, CARLOS! Contrato fechado com sucesso! Bem-vindo à família Máquina Fibra! 💙' }
-                ]
-            },
-            12: {
-                name: 'LIA', messagesId: 'wa-messages-12', statusId: 'wa-status-12', script: [
-                    { sender: 'bot', text: 'Oi, Fernando! 😊 Aqui é a LIA, assistente financeira. Tô passando pra avisar que sua fatura de R$ 109,90 venceu no dia 10.' },
-                    { sender: 'user', text: 'Oi LIA, me desculpa... esqueci mesmo, esse mês apertou.' },
-                    { sender: 'bot', text: 'Acontece, Fernando! 🙏 Vou te dar 2 opções:\n\n1️⃣ Deslocar o vencimento pra dia 20 (sem multa)\n2️⃣ Parcelar em 2x\n\nQual te atende melhor?' },
-                    { sender: 'user', text: 'Opa, deslocar pra dia 20 seria excelente!' },
-                    { sender: 'bot', text: '✅ Ajustado! Sem multa, sem juros. Gerando seu PIX agora...' },
-                    { sender: 'bot', text: '💠 *PIX MÁQUINA FIBRA*\n\n💰 Valor: R$ 109,90\n📅 Vencimento: 20/05\n\nÉ só copiar e colar no banco. 💚' }
-                ]
-            },
-            13: {
-                name: 'GABI', messagesId: 'wa-messages-13', statusId: 'wa-status-13', script: [
-                    { sender: 'user', text: 'GABI, minha internet está oscilando muito hoje.' },
-                    { sender: 'bot', text: 'Oi, Juliana! 👋 Vou te ajudar agora mesmo. Começou agora?' },
-                    { sender: 'user', text: 'Oi GABI, faz uns 30 minutos.' },
-                    { sender: 'bot', text: '🛠️ *VAMOS RESOLVER*\n\n1️⃣ Desligue o modem da tomada\n2️⃣ Aguarde 30 segundos\n3️⃣ Conecte novamente\n\nFaz isso e me avisa, combinado? 💚' },
-                    { sender: 'user', text: 'Fiz aqui mas continua lento.' },
-                    { sender: 'bot', text: '📤 *TRANSFERINDO ATENDIMENTO*\n\nEncaminhado para: Time Técnico Nível 2 ✅' },
-                    { sender: 'bot', text: 'Oi, Juliana! Voltei! O time técnico realizou uma otimização remota na sua rede. Pode testar? 🚀' },
-                    { sender: 'user', text: 'Voltou! Agora tá voando. Obrigada!' }
-                ]
-            },
-            14: {
-                name: 'NOAH', messagesId: 'wa-messages-14', statusId: 'wa-status-14', script: [
-                    { sender: 'user', text: 'Gostaria de solicitar o cancelamento do meu plano.' },
-                    { sender: 'bot', text: 'Oi, Roberto! Aqui é o NOAH. Respeito totalmente sua decisão, mas me conta o que tá te levando a querer cancelar?' },
-                    { sender: 'user', text: 'Achei uma oferta da concorrência mais barata.' },
-                    { sender: 'bot', text: 'Entendi. Roberto, você é cliente há 14 meses e sempre em dia. Tenho autonomia pra te oferecer:' },
-                    { sender: 'bot', text: '🎁 *PROPOSTA DE FIDELIDADE*\n\n📡 Upgrade: de 300 para 400 MEGA\n💰 Custo adicional: R$ 0,00\n\nTopa reconsiderar?' },
-                    { sender: 'user', text: 'Poxa, se for assim eu fico sim.' },
-                    { sender: 'bot', text: '🎉 Que notícia ótima! Sua conta agora é VIP. 🚀' }
-                ]
-            }
+            11: { name: 'TEO', messagesId: 'wa-messages-11', statusId: 'wa-status-11', script: [
+                { sender: 'user', text: 'Olá, gostaria de informações sobre os planos de internet da Máquina Fibra.' },
+                { sender: 'bot', text: 'Oi! Seja bem-vindo 👋 Aqui é o TEO, assistente comercial da Máquina Fibra Internet.\n\nEm menos de 1 minuto eu verifico se temos cobertura aí e te mostro o melhor plano pra sua casa.' },
+                { sender: 'user', text: 'Oi TEO! Sou o Carlos. Meu CEP é 95010-000.' },
+                { sender: 'bot', text: '✅ Ótima notícia! Seu endereço tá dentro da nossa área de fibra óptica premium.' },
+                { sender: 'bot', text: '💎 *1 GIGA FIBRA PREMIUM*\nR$ 139,90/mês\n\n✓ Velocidade máxima garantida\n✓ Wi-Fi 6 de última geração\n\nTopa fechar?' },
+                { sender: 'user', text: 'Acho que 1 GIGA é muito pra mim. Tem algo mais em conta?' },
+                { sender: 'bot', text: '🎯 Entendi! Deixa eu te mostrar uma opção que encaixa exatamente no que você precisa:\n\n🔸 *500 MEGA FIBRA*\nR$ 109,90/mês\n\nFaz mais sentido pro seu bolso?' },
+                { sender: 'user', text: 'Gostei desse!' },
+                { sender: 'bot', text: 'Boa! 🎯 E olha que notícia boa: Como você tá fechando hoje, eu consigo liberar:\n\n✨ *1 ANO DE AMAZON PRIME GRATUITO*\n\nPosso travar essa oferta no seu cadastro?' },
+                { sender: 'user', text: 'Com certeza!' },
+                { sender: 'bot', text: '🎉 PRONTO, CARLOS! Contrato fechado com sucesso! Bem-vindo à família Máquina Fibra! 💙' }
+            ]},
+            12: { name: 'LIA', messagesId: 'wa-messages-12', statusId: 'wa-status-12', script: [
+                { sender: 'bot', text: 'Oi, Fernando! 😊 Aqui é a LIA, assistente financeira. Tô passando pra avisar que sua fatura de R$ 109,90 venceu no dia 10.' },
+                { sender: 'user', text: 'Oi LIA, me desculpa... esqueci mesmo, esse mês apertou.' },
+                { sender: 'bot', text: 'Acontece, Fernando! 🙏 Vou te dar 2 opções:\n\n1️⃣ Deslocar o vencimento pra dia 20 (sem multa)\n2️⃣ Parcelar em 2x\n\nQual te atende melhor?' },
+                { sender: 'user', text: 'Opa, deslocar pra dia 20 seria excelente!' },
+                { sender: 'bot', text: '✅ Ajustado! Sem multa, sem juros. Gerando seu PIX agora...' },
+                { sender: 'bot', text: '💠 *PIX MÁQUINA FIBRA*\n\n💰 Valor: R$ 109,90\n📅 Vencimento: 20/05\n\nÉ só copiar e colar no banco. 💚' }
+            ]},
+            13: { name: 'GABI', messagesId: 'wa-messages-13', statusId: 'wa-status-13', script: [
+                { sender: 'user', text: 'GABI, minha internet está oscilando muito hoje.' },
+                { sender: 'bot', text: 'Oi, Juliana! 👋 Vou te ajudar agora mesmo. Começou agora?' },
+                { sender: 'user', text: 'Oi GABI, faz uns 30 minutos.' },
+                { sender: 'bot', text: '🛠️ *VAMOS RESOLVER*\n\n1️⃣ Desligue o modem da tomada\n2️⃣ Aguarde 30 segundos\n3️⃣ Conecte novamente\n\nFaz isso e me avisa, combinado? 💚' },
+                { sender: 'user', text: 'Fiz aqui mas continua lento.' },
+                { sender: 'bot', text: '📤 *TRANSFERINDO ATENDIMENTO*\n\nEncaminhado para: Time Técnico Nível 2 ✅' },
+                { sender: 'bot', text: 'Oi, Juliana! Voltei! O time técnico realizou uma otimização remota na sua rede. Pode testar? 🚀' },
+                { sender: 'user', text: 'Voltou! Agora tá voando. Obrigada!' }
+            ]},
+            14: { name: 'NOAH', messagesId: 'wa-messages-14', statusId: 'wa-status-14', script: [
+                { sender: 'user', text: 'Gostaria de solicitar o cancelamento do meu plano.' },
+                { sender: 'bot', text: 'Oi, Roberto! Aqui é o NOAH. Respeito totalmente sua decisão, mas me conta o que tá te levando a querer cancelar?' },
+                { sender: 'user', text: 'Achei uma oferta da concorrência mais barata.' },
+                { sender: 'bot', text: 'Entendi. Roberto, você é cliente há 14 meses e sempre em dia. Tenho autonomia pra te oferecer:' },
+                { sender: 'bot', text: '🎁 *PROPOSTA DE FIDELIDADE*\n\n📡 Upgrade: de 300 para 400 MEGA\n💰 Custo adicional: R$ 0,00\n\nTopa reconsiderar?' },
+                { sender: 'user', text: 'Poxa, se for assim eu fico sim.' },
+                { sender: 'bot', text: '🎉 Que notícia ótima! Sua conta agora é VIP. 🚀' }
+            ]}
         };
 
         const waState = {};
@@ -3120,9 +3413,9 @@
         const btnFullscreen = document.getElementById('btn-fullscreen');
         const btnToggleEye = document.getElementById('btn-toggle-eye');
 
-        if (btnFullscreen) btnFullscreen.addEventListener('click', () => {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-            else document.exitFullscreen();
+        if (btnFullscreen) btnFullscreen.addEventListener('click', () => { 
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen(); 
+            else document.exitFullscreen(); 
         });
 
         document.addEventListener('fullscreenchange', () => {
@@ -3130,13 +3423,13 @@
             compileSlides();
         });
 
-        if (btnMap) btnMap.addEventListener('click', () => {
-            slideMap.classList.toggle('active');
-            if (slideMap.classList.contains('active')) populateMap();
+        if (btnMap) btnMap.addEventListener('click', () => { 
+            slideMap.classList.toggle('active'); 
+            if (slideMap.classList.contains('active')) populateMap(); 
         });
-
+        
         if (btnCloseMap) btnCloseMap.addEventListener('click', () => slideMap.classList.remove('active'));
-
+        
         if (btnToggleEye) btnToggleEye.addEventListener('click', () => {
             const domIndex = domSlides.indexOf(slides[currentSlideIndex]);
             toggleSlideVisibility(domIndex);
@@ -3145,7 +3438,7 @@
         function populateMap() {
             const grid = document.getElementById('slide-map-grid');
             if (!grid) return; grid.innerHTML = '';
-
+            
             domSlides.forEach((s, i) => {
                 const isHidden = s.classList.contains('hidden-slide');
                 const isCurrent = slides[currentSlideIndex] === s;
@@ -3156,24 +3449,24 @@
                         <i class="ph ${isHidden ? 'ph-eye-slash' : 'ph-eye'}"></i>
                     </button>
                     <span class="map-num">${(i + 1).toString().padStart(2, '0')}</span>
-                    <span class="map-title">${s.getAttribute('data-title') || 'Slide ' + (i + 1)}</span>
+                    <span class="map-title">${s.getAttribute('data-title') || 'Slide ' + (i+1)}</span>
                 `;
-
+                
                 // Toggle visibility from within the map
                 item.querySelector('.map-eye-btn').addEventListener('click', (e) => {
                     e.stopPropagation();
                     toggleSlideVisibility(i);
                 });
-
+ 
                 // Navigate to slide (unhide if hidden)
-                item.addEventListener('click', () => {
+                item.addEventListener('click', () => { 
                     if (s.classList.contains('hidden-slide')) {
                         toggleSlideVisibility(i);
                     }
                     setTimeout(() => {
                         const newIndex = slides.indexOf(s);
                         if (newIndex !== -1) updateSlide(newIndex);
-                        slideMap.classList.remove('active');
+                        slideMap.classList.remove('active'); 
                     }, 0);
                 });
                 grid.appendChild(item);
@@ -3190,19 +3483,19 @@
             loadVisibilityState();
             compileSlides();
             updateSlide(0);
-
+            
             // Global Keyboard Navigation
             document.addEventListener('keydown', (e) => {
                 const k = e.key.toLowerCase();
                 if (k === 'arrowright' || k === ' ') nextSlide();
                 else if (k === 'arrowleft') prevSlide();
-                else if (k === 'f') {
-                    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-                    else document.exitFullscreen();
+                else if (k === 'f') { 
+                    if (!document.fullscreenElement) document.documentElement.requestFullscreen(); 
+                    else document.exitFullscreen(); 
                 }
-                else if (k === 'm') {
-                    slideMap.classList.toggle('active');
-                    if (slideMap.classList.contains('active')) populateMap();
+                else if (k === 'm') { 
+                    slideMap.classList.toggle('active'); 
+                    if (slideMap.classList.contains('active')) populateMap(); 
                 }
                 else if (k === 'o' || k === 'e') {
                     const domIndex = domSlides.indexOf(slides[currentSlideIndex]);
