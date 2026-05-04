@@ -699,6 +699,244 @@
         }
         .wa-typing-dot:nth-child(2) { animation-delay: 0.15s; }
         .wa-typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Calculator Styles - Enhanced V2 */
+        #slide-15 {
+            --calc-gold: #FFB800;
+            --calc-gold-glow: rgba(255, 184, 0, 0.4);
+            --calc-card-bg: rgba(255, 255, 255, 0.03);
+            --calc-border: rgba(255, 184, 0, 0.2);
+        }
+
+        .calc-container {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .calc-input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 40px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 
+                inset 0 0 50px rgba(0,0,0,0.6),
+                0 20px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .calc-input-group::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 40px;
+            padding: 1px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1), transparent, rgba(255,184,0,0.2));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .calc-btn {
+            width: 70px;
+            height: 70px;
+            flex-shrink: 0;
+            border-radius: 20px;
+            border: 1px solid var(--calc-border);
+            background: rgba(255, 184, 0, 0.05);
+            color: var(--calc-gold);
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .calc-btn:hover {
+            background: var(--calc-gold);
+            color: black;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 30px var(--calc-gold-glow);
+            border-color: var(--calc-gold);
+        }
+
+        .input-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 20px 50px;
+            min-width: 350px;
+            position: relative;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        #calc-input {
+            background: transparent;
+            border: none;
+            color: #FFD700; /* Vibrant Gold for the main number */
+            font-family: var(--font-display);
+            font-size: 82px;
+            text-align: center;
+            width: 100%;
+            outline: none;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            font-weight: 900;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .input-label {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #ffffff;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .pricing-grid-v2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 35px;
+            margin-top: 50px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .pricing-card-v2 {
+            background: rgba(13, 18, 30, 0.98); /* Deeper, more opaque navy */
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 36px;
+            padding: 45px 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .pricing-card-v2:not(.highlight) {
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 87, 255, 0.05);
+        }
+
+        .pricing-card-v2.highlight {
+            border: 2px solid #FFD700; /* Solid gold border as per image */
+            background: rgba(13, 18, 30, 0.98);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.2);
+        }
+
+        .pricing-card-v2::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 70%);
+            pointer-events: none;
+        }
+
+        .pricing-card-v2.highlight::before {
+            background: radial-gradient(circle at top right, rgba(255, 215, 0, 0.1), transparent 70%);
+        }
+
+        .pricing-card-v2:hover {
+            transform: translateY(-15px);
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 40px 80px rgba(0, 87, 255, 0.2);
+        }
+
+        .pricing-card-v2.highlight:hover {
+            border-color: var(--calc-gold);
+            background: rgba(255, 184, 0, 0.08);
+            box-shadow: 0 40px 80px rgba(255, 184, 0, 0.25);
+        }
+
+        .pricing-label {
+            font-family: var(--font-mono);
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: #00D1FF; /* Vibrant Blue/Cyan as requested */
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
+
+        .pricing-card-v2:not(.highlight) .pricing-label {
+            color: #00D1FF;
+            opacity: 0.8;
+        }
+
+        .pricing-value {
+            font-family: var(--font-display);
+            font-size: 50px;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+        }
+
+        .pricing-value span:not(.old-price-v2) {
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .highlight .pricing-value {
+            color: #FFD700; /* Brighter gold */
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 184, 0, 0.2);
+            font-weight: 900;
+        }
+
+        .pricing-subtext {
+            font-size: 16px;
+            color: #FFFFFF;
+            opacity: 0.7; /* Increased from 0.6 */
+            font-family: var(--font-body);
+            letter-spacing: 0.02em;
+            font-weight: 500;
+        }
+
+        .old-price-v2 {
+            text-decoration: line-through;
+            opacity: 0.7;
+            font-size: 24px;
+            display: block;
+            margin-bottom: 8px;
+            font-family: var(--font-mono);
+        }
+
+        .badge-v2 {
+            background: #4BFF8A; /* Neon Green as requested */
+            color: #000;
+            padding: 10px 28px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 900;
+            font-family: var(--font-mono);
+            margin-top: 25px;
+            letter-spacing: 0.1em;
+            box-shadow: 0 0 30px rgba(75, 255, 138, 0.4);
+            text-transform: uppercase;
+        }
         .wa-input-bar {
             background: #f0f2f5;
             padding: 6px 8px;
@@ -1463,82 +1701,7 @@
             </div>
         </section>
 
-        <!-- SLIDE 11 — CASE DX7 -->
-        <section class="slide slide-dark" id="slide-11" data-title="Case de Sucesso">
-            <div class="grid-bg grid-bg-dark"></div>
-            <div class="noise-overlay"></div>
-            <div class="glow-point" style="top: 0%; left: 50%; transform: translate(-50%, -50%); opacity: 0.15;"></div>
 
-            <!-- Subtle background elements -->
-            <div class="glow-point" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1;"></div>
-
-            <div class="slide-content-wrapper" style="padding-top: 40px; justify-content: center;">
-                
-                <div class="title-reveal text-center mb-10">
-                    <span class="font-mono" style="color: var(--primary); font-size: 0.8rem; letter-spacing: 0.2em; background: rgba(0, 87, 255, 0.1); padding: 6px 20px; border-radius: 50px; border: 1px solid rgba(0, 87, 255, 0.3); display: inline-block;">CASE DE SUCESSO</span>
-                </div>
-                
-                <h2 class="title-reveal text-center mb-40" style="font-size: clamp(1.6rem, 2.2vw, 2.5rem); margin-bottom: 25px;">
-                    O impacto na prática: <span style="color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3);">Case LX7.</span>
-                </h2>
-
-                <div class="title-reveal" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 850px; margin: 0 auto;">
-                    
-                    <!-- Top Left: Cenário Anterior -->
-                    <div style="background: rgba(20, 10, 10, 0.6); border: 1px solid rgba(255, 75, 75, 0.2); border-radius: 20px; padding: 20px 15px; text-align: center; backdrop-filter: blur(10px);">
-                        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 15px; background: rgba(255,75,75,0.1); padding: 4px 12px; border-radius: 20px;">
-                            <div style="width: 6px; height: 6px; border-radius: 50%; background: #FF4B4B; box-shadow: 0 0 10px #FF4B4B;"></div>
-                            <span style="color: #FF4B4B; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Cenário Anterior</span>
-                        </div>
-                        
-                        <div style="margin-bottom: 10px;">
-                            <span style="display: block; color: white; font-size: 2.5rem; font-weight: 700; line-height: 1;">7</span>
-                            <span style="display: block; color: white; font-size: 0.9rem; font-weight: 600; margin-top: 5px; letter-spacing: 1px;">OPERADORES</span>
-                        </div>
-                        <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; line-height: 1.4; margin: 0 auto; max-width: 250px;">Equipe focada em suporte N1 reativo. Gargalos de atendimento.</p>
-                    </div>
-
-                    <!-- Top Right: Máquina ISP -->
-                    <div style="background: rgba(10, 20, 30, 0.6); border: 1px solid rgba(0, 150, 255, 0.2); border-radius: 20px; padding: 20px 15px; text-align: center; backdrop-filter: blur(10px);">
-                        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 15px; background: rgba(0,150,255,0.1); padding: 4px 12px; border-radius: 20px;">
-                            <div style="width: 6px; height: 6px; border-radius: 50%; background: #0096FF; box-shadow: 0 0 10px #0096FF;"></div>
-                            <span style="color: #0096FF; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Com Máquina.ISP</span>
-                        </div>
-                        
-                        <div style="margin-bottom: 10px;">
-                            <span style="display: block; color: white; font-size: 2.5rem; font-weight: 700; line-height: 1;">4</span>
-                            <span style="display: block; color: white; font-size: 0.9rem; font-weight: 600; margin-top: 5px; letter-spacing: 1px;">OPERADORES</span>
-                        </div>
-                        <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; line-height: 1.4; margin: 0 auto; max-width: 250px;">Operação 100% autônoma. Equipe livre para foco no estratégico.</p>
-                    </div>
-
-                    <!-- Bottom: Impacto Financeiro -->
-                    <div style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(10, 30, 20, 0.8) 0%, rgba(5, 15, 10, 0.9) 100%); border: 1px solid rgba(75, 255, 138, 0.3); border-radius: 20px; padding: 25px 20px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
-                        
-                        <!-- Soft green glow inside the card -->
-                        <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 400px; height: 100px; background: #4BFF8A; filter: blur(100px); opacity: 0.15;"></div>
-
-                        <div style="position: relative; z-index: 2;">
-                            <div style="display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; background: rgba(75,255,138,0.1); padding: 8px 20px; border-radius: 20px;">
-                                <i class="ph ph-trend-up" style="color: #4BFF8A; font-size: 20px;"></i>
-                                <span style="color: #4BFF8A; font-size: 0.95rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600;">Receita Recuperada</span>
-                            </div>
-                            
-                            <div style="display: flex; align-items: baseline; justify-content: center; gap: 12px; margin-bottom: 15px;">
-                                <span style="color: rgba(255,255,255,0.6); font-size: 1.5rem; font-weight: 300;">R$</span>
-                                <span class="counter-num" id="case-revenue" style="color: #4BFF8A; font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 800; line-height: 1; letter-spacing: -1px; text-shadow: 0 0 30px rgba(75,255,138,0.3);">0,00</span>
-                            </div>
-
-                            <p style="color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.4; margin: 0 auto; max-width: 650px;">
-                                A operação não apenas se pagou no primeiro mês, como gerou <strong style="color: #4BFF8A;">caixa novo e margem limpa</strong> de forma automatizada.
-                            </p>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </section>
 
         <!-- SLIDE 12 — PAINEL DE COMANDO -->
         <section class="slide slide-light" id="slide-12" data-title="Painel de Comando">
@@ -1642,6 +1805,68 @@
                 <p class="title-reveal font-mono" style="color: var(--primary); letter-spacing: 0.1em; font-size: clamp(0.9rem, 1.1vw, 1.3rem); opacity: 0.9; text-transform: uppercase; max-width: 500px;">
                     Sua operação integrada, automatizada e em produção.
                 </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 15 — CALCULADORA -->
+        <section class="slide slide-dark" id="slide-15" data-title="Calculadora de Investimento">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="noise-overlay"></div>
+            <div class="glow-point" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.25;"></div>
+
+            <div class="slide-content-wrapper">
+                <div class="calc-container">
+                    <div class="title-reveal" style="margin-bottom: 10px;">
+                        <h2 style="font-size: clamp(2.5rem, 5vw, 4.5rem); margin-bottom: 10px; line-height: 1; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase;">
+                            QUANTO CUSTA<br>PARA A SUA <span style="color: #FFD700; text-shadow: 0 0 40px rgba(255, 215, 0, 0.4);">OPERAÇÃO?</span>
+                        </h2>
+                        <p class="opacity-70" style="font-size: 1.2rem; font-weight: 300;">Crescimento previsível atrelado ao ganho direto de eficiência e rentabilidade.</p>
+                    </div>
+
+                    <!-- Enhanced Counter Group -->
+                    <div class="calc-input-group title-reveal">
+                        <button class="calc-btn" id="calc-minus" title="Diminuir"><i class="ph ph-minus"></i></button>
+                        <div class="input-box">
+                            <input type="number" id="calc-input" value="4999" step="500">
+                            <div class="input-label">Assinantes na Base</div>
+                        </div>
+                        <button class="calc-btn" id="calc-plus" title="Aumentar"><i class="ph ph-plus"></i></button>
+                    </div>
+
+                    <!-- Split Pricing Cards -->
+                    <div class="pricing-grid-v2" style="margin: 0 auto;">
+                        
+                        <!-- Monthly Licensing Card -->
+                        <div class="pricing-card-v2 highlight title-reveal">
+                            <span class="pricing-label">Licenciamento Mensal</span>
+                            <div class="pricing-value">
+                                <span class="old-price-v2" id="calc-old-price">R$ 3.121</span>
+                                <span id="calc-monthly" style="color: #FFD700; text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);">R$ 2.653</span>
+                            </div>
+                            <p class="pricing-subtext" id="calc-range-text" style="margin-bottom: 15px;">Faixa: 1 a 4.999 assinantes</p>
+                            <div class="badge-v2">CONDIÇÃO ESPECIAL FEIRA</div>
+                        </div>
+
+                        <!-- One-time Setup Card -->
+                        <div class="pricing-card-v2 title-reveal" style="transition-delay: 0.1s;">
+                            <div class="border-beam" style="border-radius: 36px; opacity: 0.2;"></div>
+                            <span class="pricing-label">Taxa de Implantação</span>
+                            <div class="pricing-value" id="calc-setup" style="color: white;">
+                                R$ 6.000
+                            </div>
+                            <p class="pricing-subtext">Onboarding + Integração Completa</p>
+                            <div style="margin-top: 25px; font-family: var(--font-mono); font-size: 12px; color: #fff; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 8px 20px; border-radius: 12px;">
+                                Investimento Único
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <p class="title-reveal opacity-50" style="margin-top: 60px; font-size: 13px; line-height: 1.6;">
+                        * Valores de licenciamento mensal sem custos de LLM (IA) e WhatsApp (Meta).<br>
+                        Valores faturados integralmente em BRL.
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -1874,6 +2099,10 @@
                         console.error("Error in Slide 3 animation", e);
                     }
                 }
+            }
+
+            if (index === 14 && typeof gsap !== 'undefined') { // Calculator
+                updateCalculator(document.getElementById('calc-input')?.value || 4999);
             }
 
             animateAgentSlide(index, slide);
@@ -2196,21 +2425,9 @@
                 );
             }
 
-            if (index === 10 && typeof gsap !== 'undefined') { // Case LX7
-                const rev = { val: 0 }; 
-                gsap.to(rev, { 
-                    val: 88000, 
-                    duration: 2.5, 
-                    ease: "power2.out", 
-                    delay: 0.8,
-                    onUpdate: () => {
-                        const el = document.getElementById('case-revenue');
-                        if (el) el.textContent = rev.val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                    } 
-                });
-            }
 
-            if (index === 11 && typeof gsap !== 'undefined') { // Painel de Comando
+
+            if (index === 10 && typeof gsap !== 'undefined') { // Painel de Comando
                 const screens = slide.querySelectorAll('.dash-screen');
                 const dots = slide.querySelectorAll('.dash-dot');
                 if (screens.length > 0) {
@@ -2233,13 +2450,63 @@
                 }
             }
 
-            if (index === 12 && typeof gsap !== 'undefined') { // Implantação
+            if (index === 11 && typeof gsap !== 'undefined') { // Implantação
                 gsap.to('#step-progress', { width: '100%', duration: 2, ease: "power1.inOut" });
                 const steps = slide.querySelectorAll('.step-item');
                 steps.forEach((step, i) => {
                     setTimeout(() => { if (step) step.classList.add('active'); }, 500 * i);
                 });
             }
+        }
+
+        // --- Calculator Logic ---
+        const CALC_DATA = [
+            { min: 1, max: 4999, sem: 3121, feira: 2653, imp: 6000 },
+            { min: 5000, max: 9999, sem: 3585, feira: 3047, imp: 7500 },
+            { min: 10000, max: 14999, sem: 4048, feira: 3441, imp: 9000 },
+            { min: 15000, max: 19999, sem: 4512, feira: 3835, imp: 10500 },
+            { min: 20000, max: 24999, sem: 4975, feira: 4229, imp: 12000 },
+            { min: 25000, max: 29999, sem: 5438, feira: 4623, imp: 13500 },
+            { min: 30000, max: 34999, sem: 5902, feira: 5017, imp: 15000 },
+            { min: 35000, max: 39999, sem: 6365, feira: 5411, imp: 16500 },
+            { min: 40000, max: 44999, sem: 6829, feira: 5804, imp: 18000 },
+            { min: 45000, max: 49999, sem: 7292, feira: 6198, imp: 19500 },
+            { min: 50000, max: 54999, sem: 7756, feira: 6592, imp: 21000 },
+            { min: 55000, max: 59999, sem: 8219, feira: 6986, imp: 22500 },
+            { min: 60000, max: 64999, sem: 8683, feira: 7380, imp: 24000 },
+            { min: 65000, max: 69999, sem: 9146, feira: 7774, imp: 25500 },
+            { min: 70000, max: 74999, sem: 9609, feira: 8168, imp: 27000 },
+            { min: 75000, max: 79999, sem: 10073, feira: 8562, imp: 28500 },
+            { min: 80000, max: 84999, sem: 10536, feira: 8956, imp: 30000 },
+            { min: 85000, max: 89999, sem: 11000, feira: 9350, imp: 31500 },
+            { min: 90000, max: 94999, sem: 11463, feira: 9744, imp: 33000 },
+            { min: 95000, max: 99999, sem: 11927, feira: 10138, imp: 34500 },
+            { min: 100000, max: 109999, sem: 12390, feira: 10532, imp: 36000 },
+            { min: 110000, max: 119999, sem: 12853, feira: 10925, imp: 37500 },
+            { min: 120000, max: 129999, sem: 12235, feira: 10399, imp: 37815 },
+            { min: 130000, max: 140000, sem: 11522, feira: 9794, imp: 38133 }
+        ];
+
+        function updateCalculator(subs) {
+            const num = parseInt(subs) || 0;
+            let data = CALC_DATA.find(d => num >= d.min && num <= d.max) || CALC_DATA[0];
+            if (num > 140000) data = CALC_DATA[CALC_DATA.length - 1];
+
+            const format = (v) => 'R$ ' + v.toLocaleString('pt-BR');
+            const elRange = document.getElementById('calc-range-text');
+            if (elRange) elRange.textContent = `Faixa: ${data.min.toLocaleString('pt-BR')} a ${data.max.toLocaleString('pt-BR')} assinantes`;
+
+            const targets = [
+                { id: 'calc-old-price', val: data.sem },
+                { id: 'calc-monthly', val: data.feira },
+                { id: 'calc-setup', val: data.imp },
+                { id: 'calc-savings', val: data.sem - data.feira }
+            ];
+
+            targets.forEach(t => {
+                const el = document.getElementById(t.id);
+                if (el) el.textContent = format(t.val);
+            });
         }
 
         // Navigation Controls
@@ -2324,6 +2591,14 @@
         // Initialize
         if (totalSlides > 0) {
             updateSlide(0);
+
+            // Calculator Listeners
+            const calcInput = document.getElementById('calc-input');
+            if (calcInput) {
+                calcInput.addEventListener('input', (e) => updateCalculator(e.target.value));
+                document.getElementById('calc-minus')?.addEventListener('click', () => { calcInput.value = Math.max(0, parseInt(calcInput.value) - 500); updateCalculator(calcInput.value); });
+                document.getElementById('calc-plus')?.addEventListener('click', () => { calcInput.value = parseInt(calcInput.value) + 500; updateCalculator(calcInput.value); });
+            }
         } else {
             console.warn("No slides found in presentation.");
         }

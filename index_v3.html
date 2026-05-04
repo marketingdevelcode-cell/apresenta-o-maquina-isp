@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máquina.ISP | Apresentação Comercial</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/eb4cad40f0b3b7b5a55b185a44a4889f?family=Stereo+Gothic+W06+950" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- GSAP for Smooth Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        :root {
+            --font-display: 'Stereo Gothic W06 950', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --bg-dark: #0A0A0C;
+            --bg-light: #F8FAFC;
+            --primary: #0057FF;
+            --secondary: #64748B;
+            --text-dark: #0F172A;
+            --text-light: #F8FAFC;
+            --bg-surface: #F5F5F5;
+            --accent-blue: #1A6BFF;
+            --accent-green: #4BFF8A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Presentation Framework */
+        .slides-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5vh 5vw;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        /* Background Patterns */
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .grid-bg-light {
+            background-image: linear-gradient(to right, rgba(0, 87, 255, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 87, 255, 0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .grid-bg-dark {
+            background-image: linear-gradient(to right, rgba(0, 87, 255, 0.08) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 87, 255, 0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+        }
+
+        .noise-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.05;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            z-index: -1;
+        }
+
+        .glow-point {
+            position: absolute;
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            font-size: clamp(1.8rem, 3.2vw, 4.5rem);
+            margin-bottom: 0.6em;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+            font-size: clamp(1.4rem, 2.2vw, 3rem);
+            margin-bottom: 1.2em;
+        }
+
+        h3 {
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+            font-size: clamp(1rem, 1.5vw, 1.8rem);
+            margin-bottom: 1em;
+        }
+
+        .title-reveal {
+            opacity: 1;
+        }
+
+        /* Navigation UI */
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .ui-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2vh 4vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+            z-index: 1000;
+            opacity: 0.4;
+            transition: opacity 0.4s ease;
+        }
+
+        .ui-header:hover { opacity: 1; }
+
+        .ui-controls { display: flex; align-items: center; gap: 12px; }
+
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .light-mode .btn-icon {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-dark);
+        }
+
+        .light-mode .btn-icon:hover { color: white; }
+
+        /* Slide Map Overlay */
+        .slide-map-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            padding: 5vh 8vw;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .slide-map-overlay.active { display: flex; opacity: 1; }
+
+        .slide-map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .slide-map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            overflow-y: auto;
+            padding-bottom: 40px;
+        }
+
+        .map-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .map-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .map-item.current {
+            border-color: var(--primary);
+            background: rgba(0, 87, 255, 0.1);
+        }
+
+        .map-num {
+            font-family: var(--font-mono);
+            color: var(--primary);
+            font-size: 12px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .map-title {
+            font-family: var(--font-display);
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .slide-counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.1em;
+        }
+
+        .slide-counter span { color: var(--primary); }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .light-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 87, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 87, 255, 0.05);
+            border-radius: 24px;
+            padding: 40px;
+            color: var(--text-dark);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .glass-card > *, .light-card > *, .pain-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .border-beam {
+            position: absolute;
+            inset: 0;
+            z-index: 1 !important;
+            border-radius: 24px;
+            border: 2px solid transparent;
+            background: linear-gradient(var(--bg-light), var(--bg-light)) padding-box,
+                        conic-gradient(from var(--angle), transparent 0%, var(--primary) 20%, transparent 40%) border-box;
+            --angle: 0deg;
+            animation: rotate-beam 4s linear infinite;
+        }
+
+        .slide-dark .border-beam {
+            background: linear-gradient(var(--bg-dark), var(--bg-dark)) padding-box,
+                        conic-gradient(from var(--angle), transparent 0%, var(--primary) 20%, transparent 40%) border-box;
+        }
+
+        @property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+
+        @keyframes rotate-beam {
+            from { --angle: 0deg; }
+            to { --angle: 360deg; }
+        }
+
+        /* Specific Layouts */
+        .layout-grid-2x2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .layout-split {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .split-left { flex: 1.2; }
+        .split-left h2 { color: var(--primary); margin-bottom: 0.5em; }
+        .split-left h3 { opacity: 0.6; margin-bottom: 2em; }
+        
+        .topics-list { list-style: none; margin-top: 20px; }
+        
+        .topic-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: clamp(1.1rem, 1.3vw, 1.4rem);
+            line-height: 1.4;
+        }
+        
+        .check-bullet {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 18px;
+            color: var(--primary);
+            background: transparent;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+        
+        .check-bullet.active {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(0, 87, 255, 0.3);
+        }
+
+        /* Slide Styles */
+        .slide-dark { 
+            background: radial-gradient(circle at center, #050E25 0%, #020617 70%, #000000 100%);
+            color: var(--text-light); 
+        }
+        
+        .slide-light { background-color: var(--bg-light); color: var(--text-dark); }
+
+        .slide-content-wrapper {
+            width: 100%;
+            height: 100%;
+            max-width: 1600px;
+            max-height: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            position: relative;
+            padding: 120px 60px 60px 60px;
+        }
+
+        .slide { padding: 0; display: flex; justify-content: center; align-items: center; }
+
+        /* Logo and Assets */
+        .logo-main { height: 50px; margin-bottom: 20px; object-fit: contain; }
+        
+        video[id^="agent-video-"] {
+            border-radius: 20px;
+            object-fit: cover;
+            mask-image: radial-gradient(circle, black 65%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle, black 65%, transparent 100%);
+        }
+        
+        /* Ecosystem Animation */
+        .ecosystem-visual {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hub-icon {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+            width: 140px;
+            height: 140px;
+            box-shadow: 0 0 50px rgba(0, 87, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .orbital {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .orbital:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: var(--primary);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 87, 255, 0.4);
+        }
+
+        .orbital img { width: 65px; height: 65px; object-fit: contain; }
+
+        /* WhatsApp Mockup */
+        .wa-phone {
+            width: 336px;
+            background: #1a1a1c;
+            border-radius: 36px;
+            padding: 8px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3), 0 0 0 1.5px #2c2c2e;
+            flex-shrink: 0;
+        }
+        .wa-screen {
+            width: 100%;
+            height: 576px;
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .wa-status-bar {
+            height: 28px;
+            background: #008069;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 14px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            flex-shrink: 0;
+        }
+        .wa-header {
+            background: #008069;
+            padding: 6px 10px 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .wa-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .wa-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+        .wa-header-info { flex: 1; }
+        .wa-header-name { font-size: 13px; font-weight: 600; color: white; line-height: 1.2; }
+        .wa-header-status { font-size: 10px; color: rgba(255,255,255,0.8); }
+        .wa-header-status.typing { font-style: italic; }
+        .wa-messages {
+            flex: 1;
+            overflow: hidden;
+            padding: 8px;
+            background: #efeae2;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='%23000' fill-opacity='0.025'><path d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/></g></svg>");
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .wa-msg {
+            max-width: 82%;
+            padding: 5px 8px 4px;
+            border-radius: 7.5px;
+            font-size: 11.5px;
+            line-height: 1.35;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+            animation: waMsgIn 0.2s ease-out;
+            position: relative;
+        }
+        @keyframes waMsgIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .wa-msg.bot { background: #fff; align-self: flex-start; border-top-left-radius: 0; color: #111b21; margin-top: 2px; }
+        .wa-msg.user { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; color: #111b21; margin-top: 2px; }
+        .wa-msg-meta { display: flex; justify-content: flex-end; gap: 2px; margin-top: 1px; font-size: 9px; color: #667781; }
+        .wa-checks { color: #53bdeb; letter-spacing: -4px; font-size: 11px; font-weight: bold; }
+        .wa-typing {
+            background: #fff;
+            align-self: flex-start;
+            padding: 8px 12px;
+            border-radius: 7.5px;
+            border-top-left-radius: 0;
+            display: flex;
+            gap: 4px;
+            animation: waMsgIn 0.2s ease-out;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+        }
+        .wa-typing-dot {
+            width: 5px; height: 5px;
+            background: #8696a0;
+            border-radius: 50%;
+            animation: typingBounce 1.3s infinite;
+        }
+        .wa-typing-dot:nth-child(2) { animation-delay: 0.15s; }
+        .wa-typing-dot:nth-child(3) { animation-delay: 0.3s; }
+        .wa-input-bar {
+            background: #f0f2f5;
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            border-top: 1px solid #e9edef;
+        }
+        .wa-input-fake { flex: 1; background: white; border-radius: 20px; padding: 6px 10px; font-size: 11px; color: #8696a0; }
+        .wa-send-btn {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: #008069;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .wa-send-btn svg { width: 14px; height: 14px; fill: white; }
+
+        /* Navigation Buttons */
+        .nav-controls {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+            pointer-events: none;
+            z-index: 110;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .nav-btn:hover { background: var(--primary); border-color: var(--primary); color: white; transform: scale(1.1); }
+
+        /* ROI Equation Styles */
+        .roi-equation-container { display: flex; align-items: center; justify-content: center; gap: 40px; width: 100%; max-width: 1200px; }
+        .roi-side { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .roi-divider { width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .roi-divider.blue { background: linear-gradient(90deg, transparent, var(--primary), transparent); }
+        .roi-equals { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .capacity-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 87, 255, 0.3); border-radius: 12px; padding: 15px 30px; backdrop-filter: blur(10px); margin-top: 30px; }
+        
+        /* Flow Visualization Slide 2 */
+        .flow-container { position: relative; width: 450px; height: 600px; display: flex; justify-content: center; }
+        .flow-svg { width: 100%; height: 100%; overflow: visible; }
+        .flow-segment { fill: none; stroke: url(#flow-grad); stroke-width: 40; stroke-linecap: round; opacity: 0.1; }
+        .flow-path-active { fill: none; stroke: url(#flow-grad); stroke-width: 40; stroke-linecap: round; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .leak-particle { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; position: absolute; filter: blur(2px); pointer-events: none; }
+        .flow-label { position: absolute; width: 180px; font-family: var(--font-mono); font-size: 11px; opacity: 0.8; line-height: 1.2; pointer-events: none; }
+        .flow-label-left { text-align: right; left: -200px; }
+        .flow-label-right { text-align: left; right: -200px; color: var(--accent-green); }
+        .flow-value { display: block; font-family: var(--font-display); font-size: 18px; color: white; margin-top: 4px; }
+
+        .animated-border-pill { position: relative; display: inline-block; border-radius: 99px; padding: 1px; overflow: hidden; }
+        .animated-border-pill::before { content: ''; position: absolute; top: -100px; bottom: -100px; left: -100px; right: -100px; background: conic-gradient(from 0deg, transparent 0%, transparent 85%, var(--primary) 95%, var(--accent-green) 100%); animation: rotate-border 3s linear infinite; z-index: 0; }
+        .animated-border-pill-inner { position: relative; z-index: 1; background: #060913; border-radius: 99px; padding: 12px 30px; display: inline-flex; align-items: center; justify-content: center; }
+        @keyframes rotate-border { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Progress Steps */
+        .steps-container { display: flex; width: 100%; max-width: 1200px; justify-content: space-between; position: relative; margin-top: 60px; }
+        .step-line { position: absolute; top: 25px; left: 0; width: 100%; height: 2px; background: rgba(0,0,0,0.05); z-index: 1; }
+        .step-line-progress { position: absolute; top: 0; left: 0; height: 100%; background: var(--primary); width: 0%; }
+        .step-item { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 200px; text-align: center; }
+        .step-num { width: 50px; height: 50px; background: white; border: 2px solid #eee; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-family: var(--font-display); font-size: 18px; margin-bottom: 20px; transition: all 0.5s ease; }
+        .step-item.active .step-num { border-color: var(--primary); color: var(--primary); box-shadow: 0 0 20px rgba(0, 87, 255, 0.2); }
+
+        .counter-num { font-family: var(--font-display); font-size: 48px; color: var(--primary); }
+        .roi-icon { font-size: 42px; transition: all 0.3s ease; }
+        .roi-icon.current { color: rgba(255,255,255,0.2); }
+        .roi-icon.blue-glow { color: var(--primary); filter: drop-shadow(0 0 15px rgba(0, 87, 255, 0.6)); }
+
+        .dash-dot { width: 8px; height: 8px; border-radius: 50%; background: white; opacity: 0.4; transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <main class="slides-container" id="slides-container">
+
+        <!-- SLIDE 1 — CAPA -->
+        <section class="slide slide-dark active" id="slide-1" data-title="Capa">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="hero-bg-image" style="position: absolute; top: 0; right: 0; bottom: 0; width: 80%; z-index: 0; opacity: 1; -webkit-mask-image: linear-gradient(to left, black 70%, transparent 100%); mask-image: linear-gradient(to left, black 70%, transparent 100%);">
+                <img src="images/imagem capa máquina isp - v1.png" style="width: 100%; height: 100%; object-fit: cover; object-position: bottom right;">
+            </div>
+            <div class="noise-overlay" style="z-index: 1;"></div>
+            <div class="glow-point" style="top: -10%; left: -10%; z-index: 1;"></div>
+            <div class="slide-content-wrapper" style="gap: 30px; justify-content: center; align-items: flex-start; text-align: left; padding-left: 5vw; width: 100%; z-index: 2; position: relative;">
+                <img src="images/Logo Principal - Versão Branco - Azul.png" alt="Máquina.ISP" class="logo-main" style="height: 45px; margin-bottom: 20px;">
+                <h1 style="max-width: 900px; margin-bottom: 30px; line-height: 1.2;">
+                    VOCÊ TRABALHA TODO DIA.<br>
+                    <span style="color: var(--primary); text-shadow: 0 0 40px rgba(0, 87, 255, 0.4);">SEU PROVEDOR AINDA DEPENDE<br>DE VOCÊ PARA TUDO.</span>
+                </h1>
+                <div class="animated-border-pill">
+                    <div class="animated-border-pill-inner">
+                        <p class="font-mono" style="color: var(--primary); letter-spacing: 0.2em; font-size: clamp(0.7rem, 0.9vw, 1rem); font-weight: 700; margin: 0;">
+                            MÁQUINA.ISP — DO LEAD AO SUPORTE, TUDO NO AUTOMÁTICO
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2 — VAZAMENTO DE CAIXA (SVG) -->
+        <section class="slide slide-dark" id="slide-2" data-title="Fluxo de Vazamento">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="noise-overlay"></div>
+            <div class="slide-content-wrapper" style="flex-direction: row; justify-content: space-between; align-items: center; padding: 100px 8vw 60px; gap: 40px;">
+                <div class="leakage-left" style="flex: 1; max-width: 550px;">
+                    <h1 class="title-reveal" style="margin-bottom: 30px; line-height: 1.1; font-size: clamp(1.8rem, 3.2vw, 2.8rem);">
+                        Onde a sua operação <br><span style="color: var(--accent-green);">vaza caixa hoje?</span>
+                    </h1>
+                    <div class="glass-card title-reveal" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 30px;">
+                        <p style="font-size: 1.1rem; line-height: 1.6; opacity: 0.8;">
+                            O crescimento do seu provedor está sendo corroído por atritos invisíveis. 
+                            Sistemas dependentes de processos manuais e cobrança reativa sangram o seu caixa em silêncio.
+                        </p>
+                    </div>
+                </div>
+                <div class="leakage-right" style="flex: 1; position: relative; height: 100%; display: flex; justify-content: center; align-items: center;">
+                    <div class="flow-container">
+                        <svg class="flow-svg" viewBox="0 0 100 600" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="flow-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#0057FF" />
+                                    <stop offset="100%" stop-color="#4BFF8A" />
+                                </linearGradient>
+                            </defs>
+                            <path class="flow-segment" d="M 50,0 C 50,150 50,150 50,300 C 50,450 50,450 50,600" />
+                            <path id="active-flow-path" class="flow-path-active" d="M 50,0 C 50,150 50,150 50,300 C 50,450 50,450 50,600" />
+                        </svg>
+                        <div class="flow-label flow-label-left title-reveal" style="top: 5%;">RECEITA BRUTA<span class="flow-value">100,0%</span></div>
+                        <div class="flow-label flow-label-left title-reveal" style="top: 25%;">CUSTOS OPERACIONAIS<span class="flow-value">83,9%</span></div>
+                        <div class="flow-label flow-label-left title-reveal" style="top: 45%;">EBITDA<span class="flow-value">16,1%</span></div>
+                        <div class="flow-label flow-label-left title-reveal" style="top: 70%;">LUCRO<span class="flow-value">23,6%</span></div>
+                        <div class="flow-label flow-label-left title-reveal" style="top: 90%;">LUCRO LÍQUIDO<span class="flow-value">15,8%</span></div>
+
+                        <div class="flow-label flow-label-right title-reveal" style="top: 15%;">N1 MANUAL INEFICIENTE</div>
+                        <div class="flow-label flow-label-right title-reveal" style="top: 35%;">COBRANÇA REATIVA</div>
+                        <div class="flow-label flow-label-right title-reveal" style="top: 55%;">ATRITOS OCULTOS</div>
+                        <div class="flow-label flow-label-right title-reveal" style="top: 75%;">PERDAS OPERACIONAIS</div>
+                        <div class="flow-label flow-label-right title-reveal" style="top: 92%;">VAZAMENTO DE CAIXA</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3 — PONTOS DE SANGRAMENTO -->
+        <section class="slide slide-dark" id="slide-3" data-title="Sangramento Silencioso">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="noise-overlay"></div>
+            <div class="slide-content-wrapper" style="gap: 50px;">
+                <h2 class="title-reveal" style="text-align: center;">Os 4 pontos de <span style="color: var(--accent-green);">sangramento silencioso</span></h2>
+                <div class="layout-grid-2x2" style="max-width: 1300px; gap: 30px;">
+                    <div class="glass-card title-reveal" style="display: flex; gap: 25px; padding: 35px; align-items: center;">
+                        <div class="border-beam"></div>
+                        <div style="background: rgba(0, 87, 255, 0.1); width: 80px; height: 80px; border-radius: 16px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;"><i class="ph ph-trend-down" style="font-size: 40px; color: var(--primary);"></i></div>
+                        <div><h3 style="margin-bottom: 10px;">Churn Recorrente</h3><p style="opacity: 0.7; font-size: 1.05rem;">Clientes cancelam sem chance à retenção. Perda de LTV silenciosa todo mês.</p></div>
+                    </div>
+                    <div class="glass-card title-reveal" style="display: flex; gap: 25px; padding: 35px; align-items: center;">
+                        <div class="border-beam" style="background: linear-gradient(var(--bg-dark), var(--bg-dark)) padding-box, conic-gradient(from var(--angle), transparent 0%, var(--accent-green) 20%, transparent 40%) border-box;"></div>
+                        <div style="background: rgba(75, 255, 138, 0.1); width: 80px; height: 80px; border-radius: 16px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;"><i class="ph ph-calendar-x" style="font-size: 40px; color: var(--accent-green);"></i></div>
+                        <div><h3 style="margin-bottom: 10px;">Inadimplência</h3><p style="opacity: 0.7; font-size: 1.05rem;">Falta de timing na régua de cobrança. O caixa é corroído por passivos acumulados.</p></div>
+                    </div>
+                    <div class="glass-card title-reveal" style="display: flex; gap: 25px; padding: 35px; align-items: center;">
+                        <div class="border-beam"></div>
+                        <div style="background: rgba(0, 87, 255, 0.1); width: 80px; height: 80px; border-radius: 16px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;"><i class="ph ph-chart-pie-slice" style="font-size: 40px; color: var(--primary);"></i></div>
+                        <div><h3 style="margin-bottom: 10px;">Erosão de Base</h3><p style="opacity: 0.7; font-size: 1.05rem;">Perda gradual de market share por falta de proatividade e percepção de valor.</p></div>
+                    </div>
+                    <div class="glass-card title-reveal" style="display: flex; gap: 25px; padding: 35px; align-items: center;">
+                        <div class="border-beam" style="background: linear-gradient(var(--bg-dark), var(--bg-dark)) padding-box, conic-gradient(from var(--angle), transparent 0%, var(--accent-green) 20%, transparent 40%) border-box;"></div>
+                        <div style="background: rgba(75, 255, 138, 0.1); width: 80px; height: 80px; border-radius: 16px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;"><i class="ph ph-eye-slash" style="font-size: 40px; color: var(--accent-green);"></i></div>
+                        <div><h3 style="margin-bottom: 10px;">Leads Perdidos</h3><p style="opacity: 0.7; font-size: 1.05rem;">Demora no atendimento mata a venda. Leads esfriam em janelas sem resposta.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4 — ECOSSISTEMA -->
+        <section class="slide slide-dark" id="slide-4" data-title="Ecossistema">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="noise-overlay"></div>
+            <div class="slide-content-wrapper" style="justify-content: space-evenly; padding-top: 80px;">
+                <h2 class="title-reveal text-center" style="max-width: 1000px; margin-bottom: 20px;">Inteligência operando em cima dos seus sistemas.</h2>
+                <div class="ecosystem-visual" style="width: 800px; height: 500px; position: relative; margin: 0 auto; transform: scale(0.9);">
+                    <svg width="800" height="500" style="position: absolute; top:0; left:0; z-index: 1; overflow: visible;" id="neural-svg">
+                        <defs><filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter></defs>
+                        <g id="eco-lines"></g><g id="eco-particles"></g>
+                    </svg>
+                    <div class="hub-icon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 5; width: 140px; height: 140px; display: flex; justify-content: center; align-items: center;">
+                        <div class="core-ring core-ring-1" style="position: absolute; width: 180px; height: 180px; border: 2px dashed rgba(0, 87, 255, 0.5); border-radius: 50%; animation: spin 20s linear infinite;"></div>
+                        <div class="core-ring core-ring-2" style="position: absolute; width: 230px; height: 230px; border: 3px solid rgba(75, 255, 138, 0.4); border-radius: 50%; border-top-color: transparent; border-bottom-color: transparent; animation: spin-reverse 15s linear infinite;"></div>
+                        <div class="core-ring core-ring-3" style="position: absolute; width: 140px; height: 140px; background: rgba(0, 20, 50, 0.95); border-radius: 50%; box-shadow: 0 0 60px rgba(0, 87, 255, 0.8); border: 2px solid rgba(0, 87, 255, 0.8); backdrop-filter: blur(10px);"></div>
+                        <img src="images/logo icone 2.png" alt="Máquina.ISP" style="width: 65%; position: relative; z-index: 2; filter: drop-shadow(0 0 20px rgba(0, 87, 255, 1)); object-fit: contain;">
+                        <div class="core-pulse" style="position: absolute; width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--accent-green); opacity: 0; z-index: 1;"></div>
+                    </div>
+                    <div class="orbital node" data-x="-320" data-y="-120"><img src="images/logo ixc soft.png" alt="IXC"></div>
+                    <div class="orbital node" data-x="-350" data-y="80"><img src="images/logo sgp.png" alt="SGP"></div>
+                    <div class="orbital node" data-x="-180" data-y="210"><img src="images/logo hubsoft.png" alt="Hubsoft"></div>
+                    <div class="orbital node" data-x="180" data-y="210"><img src="images/logo rd station.png" alt="RD Station"></div>
+                    <div class="orbital node" data-x="350" data-y="80"><img src="images/logo pipedrive.png" alt="Pipedrive"></div>
+                    <div class="orbital node" data-x="320" data-y="-120"><img src="images/logo whatapp.png" alt="WhatsApp"></div>
+                    <div class="orbital node" data-x="0" data-y="-210"><img src="images/logo planilha.png" alt="Planilha"></div>
+                </div>
+                <p class="title-reveal text-center font-mono" style="margin-top: 40px; color: var(--primary); font-weight: bold;">Sem troca de plataforma. Os agentes operam diretamente nos seus sistemas.</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 5 — METODOLOGIA -->
+        <section class="slide slide-light" id="slide-5" data-title="Metodologia">
+            <div class="grid-bg grid-bg-light"></div>
+            <div class="slide-content-wrapper">
+                <h2 class="title-reveal mb-20 text-center">Uma metodologia construída para as 4 frentes de impacto.</h2>
+                <div class="layout-grid-2x2" style="margin-top: 30px;">
+                    <div class="light-card title-reveal"><div class="border-beam"></div><i class="ph ph-funnel-simple counter-num" style="font-size: 48px; margin-bottom: 15px; display: block;"></i><h3>Dimensão 1 — Vendas</h3><p class="opacity-70">Captura e conversão de leads com resposta imediata.</p></div>
+                    <div class="light-card title-reveal"><div class="border-beam" style="background: linear-gradient(var(--bg-light), var(--bg-light)) padding-box, conic-gradient(from var(--angle), transparent 0%, var(--accent-green) 20%, transparent 40%) border-box;"></div><i class="ph ph-wallet" style="font-size: 48px; color: var(--accent-green); margin-bottom: 15px; display: block;"></i><h3>Dimensão 2 — Cobrança</h3><p class="opacity-70">Régua automatizada com cadência e negociação.</p></div>
+                    <div class="light-card title-reveal"><div class="border-beam"></div><i class="ph ph-headset counter-num" style="font-size: 48px; margin-bottom: 15px; display: block;"></i><h3>Dimensão 3 — Suporte</h3><p class="opacity-70">Atendimento padronizado, rastreável e histórico unificado.</p></div>
+                    <div class="light-card title-reveal"><div class="border-beam" style="background: linear-gradient(var(--bg-light), var(--bg-light)) padding-box, conic-gradient(from var(--angle), transparent 0%, var(--accent-green) 20%, transparent 40%) border-box;"></div><i class="ph ph-shield-check" style="font-size: 48px; color: var(--accent-green); margin-bottom: 15px; display: block;"></i><h3>Dimensão 4 — Retenção</h3><p class="opacity-70">Processo ativo de retenção com identificação de causa raiz.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6 — TEO -->
+        <section class="slide slide-light" id="slide-6" data-title="Agente TEO">
+            <div class="grid-bg grid-bg-light"></div>
+            <div class="slide-content-wrapper">
+                <div class="layout-split">
+                    <div class="split-left">
+                        <h2 class="title-reveal" style="color: var(--primary);">TEO</h2>
+                        <h3 class="title-reveal" style="opacity: 0.7;">Agente de Vendas</h3>
+                        <ul class="topics-list">
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Atende leads no momento da chegada.</li>
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Valida cobertura técnica direto no ERP.</li>
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Conduz o cliente até a assinatura digital.</li>
+                        </ul>
+                    </div>
+                    <div class="split-right" style="display: flex; justify-content: center; align-items: center; position: relative; opacity: 0;">
+                        <video src="videos/Vídeo TEO.mp4" muted playsinline autoplay id="agent-video-6" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
+                        <div class="wa-phone" id="agent-chat-6" style="display: none; position: absolute; z-index: 6; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <div class="wa-screen"><div class="wa-status-bar"><span>9:41</span><span>▲▲▲ 🔋</span></div><div class="wa-header"><div class="wa-avatar" style="background-color: white;"><img src="images/TEO.png"></div><div class="wa-header-info"><div class="wa-header-name">TEO — Comercial</div><div class="wa-header-status" id="wa-status-6">online</div></div></div><div class="wa-messages" id="wa-messages-6"></div><div class="wa-input-bar"><div class="wa-input-fake">Mensagem</div><div class="wa-send-btn"><svg viewBox="0 0 24 24"><path d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"/></svg></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7 — LIA -->
+        <section class="slide slide-light" id="slide-7" data-title="Agente LIA">
+            <div class="grid-bg grid-bg-light"></div>
+            <div class="slide-content-wrapper">
+                <div class="layout-split">
+                    <div class="split-left">
+                        <h2 class="title-reveal" style="color: var(--primary);">LIA</h2>
+                        <h3 class="title-reveal" style="opacity: 0.7;">Agente de Cobrança</h3>
+                        <ul class="topics-list">
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Executa régua com cadência inteligente.</li>
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Negocia parcelamentos e condições.</li>
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Realiza desbloqueios de confiança.</li>
+                        </ul>
+                    </div>
+                    <div class="split-right" style="display: flex; justify-content: center; align-items: center; position: relative; opacity: 0;">
+                        <video src="videos/Vídeo LIA.mp4" muted playsinline autoplay id="agent-video-7" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
+                        <div class="wa-phone" id="agent-chat-7" style="display: none; position: absolute; z-index: 6; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <div class="wa-screen"><div class="wa-status-bar"><span>9:41</span><span>▲▲▲ 🔋</span></div><div class="wa-header"><div class="wa-avatar" style="background-color: white;"><img src="images/LIA 1.png"></div><div class="wa-header-info"><div class="wa-header-name">LIA — Financeiro</div><div class="wa-header-status" id="wa-status-7">online</div></div></div><div class="wa-messages" id="wa-messages-7"></div><div class="wa-input-bar"><div class="wa-input-fake">Mensagem</div><div class="wa-send-btn"><svg viewBox="0 0 24 24"><path d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"/></svg></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 8 — GABI -->
+        <section class="slide slide-light" id="slide-8" data-title="Agente GABI">
+            <div class="grid-bg grid-bg-light"></div>
+            <div class="slide-content-wrapper">
+                <div class="layout-split">
+                    <div class="split-left">
+                        <h2 class="title-reveal" style="color: var(--primary);">GABI</h2>
+                        <h3 class="title-reveal" style="opacity: 0.7;">Agente de Suporte</h3>
+                        <ul class="topics-list">
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Atua em tickets com triagem e N1.</li>
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Automatiza pesquisas de NPS.</li>
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Mantém histórico unificado.</li>
+                        </ul>
+                    </div>
+                    <div class="split-right" style="display: flex; justify-content: center; align-items: center; position: relative; opacity: 0;">
+                        <video src="videos/Vídeo gabi - entrando em cena.mp4" muted playsinline autoplay id="agent-video-8" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
+                        <div class="wa-phone" id="agent-chat-8" style="display: none; position: absolute; z-index: 6; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <div class="wa-screen"><div class="wa-status-bar"><span>9:41</span><span>▲▲▲ 🔋</span></div><div class="wa-header"><div class="wa-avatar" style="background-color: white;"><img src="images/GABI.png"></div><div class="wa-header-info"><div class="wa-header-name">GABI — Suporte</div><div class="wa-header-status" id="wa-status-8">online</div></div></div><div class="wa-messages" id="wa-messages-8"></div><div class="wa-input-bar"><div class="wa-input-fake">Mensagem</div><div class="wa-send-btn"><svg viewBox="0 0 24 24"><path d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"/></svg></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 9 — NOAH -->
+        <section class="slide slide-light" id="slide-9" data-title="Agente NOAH">
+            <div class="grid-bg grid-bg-light"></div>
+            <div class="slide-content-wrapper">
+                <div class="layout-split">
+                    <div class="split-left">
+                        <h2 class="title-reveal" style="color: var(--primary);">NOAH</h2>
+                        <h3 class="title-reveal" style="opacity: 0.7;">Agente de Retenção</h3>
+                        <ul class="topics-list">
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Recebe solicitações de cancelamento.</li>
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Conduz abordagem estruturada.</li>
+                            <li class="topic-item topic-reveal"><span class="check-bullet"><i class="ph ph-check"></i></span> Identifica motivo real e oferece ajustes.</li>
+                        </ul>
+                    </div>
+                    <div class="split-right" style="display: flex; justify-content: center; align-items: center; position: relative; opacity: 0;">
+                        <video src="videos/Vídeo NOAH.mp4" muted playsinline autoplay id="agent-video-9" style="position: relative; width: 100%; max-width: 315px; border-radius: 20px; z-index: 5; display: block; opacity: 0;"></video>
+                        <div class="wa-phone" id="agent-chat-9" style="display: none; position: absolute; z-index: 6; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <div class="wa-screen"><div class="wa-status-bar"><span>9:41</span><span>▲▲▲ 🔋</span></div><div class="wa-header"><div class="wa-avatar" style="background-color: white;"><img src="images/NOAH.png"></div><div class="wa-header-info"><div class="wa-header-name">NOAH — Retenção</div><div class="wa-header-status" id="wa-status-9">online</div></div></div><div class="wa-messages" id="wa-messages-9"></div><div class="wa-input-bar"><div class="wa-input-fake">Mensagem</div><div class="wa-send-btn"><svg viewBox="0 0 24 24"><path d="M1.101 21.757 23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"/></svg></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10 — ROI -->
+        <section class="slide slide-dark" id="slide-10" data-title="ROI">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="slide-content-wrapper">
+                <h1 class="title-reveal text-center">Fazer Mais com Menos.</h1>
+                <div class="roi-equation-container">
+                    <div class="roi-side">
+                        <h3 class="opacity-50 mb-20">Cenário Atual</h3>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 300px;">
+                            <iconify-icon icon="solar:user-bold" class="roi-icon current"></iconify-icon>
+                            <iconify-icon icon="solar:user-bold" class="roi-icon current"></iconify-icon>
+                            <iconify-icon icon="solar:user-bold" class="roi-icon current"></iconify-icon>
+                            <iconify-icon icon="solar:user-bold" class="roi-icon current"></iconify-icon>
+                            <iconify-icon icon="solar:user-bold" class="roi-icon current"></iconify-icon>
+                        </div>
+                        <div class="roi-divider"></div>
+                        <p class="font-mono">Time Cheio = Custo Alto</p>
+                    </div>
+                    <div class="roi-equals"><h1>=</h1></div>
+                    <div class="roi-side">
+                        <h3 class="mb-20" style="color: var(--primary);">Com Máquina.ISP</h3>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 300px;">
+                            <iconify-icon icon="solar:user-bold" class="roi-icon blue-glow"></iconify-icon>
+                            <iconify-icon icon="solar:user-bold" class="roi-icon blue-glow"></iconify-icon>
+                        </div>
+                        <div class="roi-divider blue"></div>
+                        <p class="font-mono">Time Otimizado = Eficiência</p>
+                        <div class="capacity-box"><p>Capacidade de Atendimento Dobrada</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 11 — BENEFÍCIOS -->
+        <section class="slide slide-dark" id="slide-11" data-title="Benefícios">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="slide-content-wrapper">
+                <h2 class="title-reveal text-center mb-40">Impacto direto na operação.</h2>
+                <div style="display: flex; justify-content: space-around; width: 100%; max-width: 1200px;">
+                    <div class="text-center">
+                        <svg width="200" height="200" viewBox="0 0 280 280" style="transform: rotate(-90deg);"><circle cx="140" cy="140" r="125" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"></circle><circle id="circle-benefit-1" cx="140" cy="140" r="125" fill="none" stroke="#4BFF8A" stroke-width="12" stroke-dasharray="785" stroke-dashoffset="785" stroke-linecap="round"></circle></svg>
+                        <div class="counter-num">-<span id="benefit-1">0</span>%</div><h3>Inadimplência</h3>
+                    </div>
+                    <div class="text-center">
+                        <svg width="200" height="200" viewBox="0 0 280 280" style="transform: rotate(-90deg);"><circle cx="140" cy="140" r="125" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"></circle><circle id="circle-benefit-2" cx="140" cy="140" r="125" fill="none" stroke="#4BFF8A" stroke-width="12" stroke-dasharray="785" stroke-dashoffset="785" stroke-linecap="round"></circle></svg>
+                        <div class="counter-num">-<span id="benefit-2">0</span>%</div><h3>Churn</h3>
+                    </div>
+                    <div class="text-center">
+                        <svg width="200" height="200" viewBox="0 0 280 280" style="transform: rotate(-90deg);"><circle cx="140" cy="140" r="125" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"></circle><circle id="circle-benefit-3" cx="140" cy="140" r="125" fill="none" stroke="var(--primary)" stroke-width="12" stroke-dasharray="785" stroke-dashoffset="785" stroke-linecap="round"></circle></svg>
+                        <div class="counter-num">+<span id="benefit-3">0</span>%</div><h3>Base Ativa</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 12 — CASE LX7 -->
+        <section class="slide slide-dark" id="slide-12" data-title="Case LX7">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="slide-content-wrapper">
+                <h2 class="title-reveal text-center mb-40">O impacto na prática: Case LX7.</h2>
+                <div class="layout-grid-2x2">
+                    <div class="glass-card text-center"><h3>Cenário Anterior</h3><h1>7</h1><p>Operadores</p></div>
+                    <div class="glass-card text-center" style="border-color: var(--primary);"><h3>Com Máquina.ISP</h3><h1>4</h1><p>Operadores</p></div>
+                    <div class="glass-card text-center" style="grid-column: 1/3; border-color: var(--accent-green);">
+                        <h3>Receita Recuperada</h3>
+                        <h1 style="color: var(--accent-green);">R$ <span id="case-revenue">0,00</span></h1>
+                        <p>Operação se pagou no primeiro mês.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 13 — DASHBOARD -->
+        <section class="slide slide-light" id="slide-13" data-title="Dashboard">
+            <div class="grid-bg grid-bg-light"></div>
+            <div class="slide-content-wrapper">
+                <h2 class="title-reveal text-center mb-40">Toda a operação na palma da mão.</h2>
+                <div style="width: 100%; max-width: 1000px; height: 500px; background: white; border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); overflow: hidden; position: relative;">
+                    <div style="height: 30px; background: #eee; border-bottom: 1px solid #ddd;"></div>
+                    <div id="dashboard-screens" style="height: 100%; position: relative;">
+                        <img src="images/dashboard-tela1.png.png" class="dash-screen" style="position: absolute; width: 100%; height: 100%; object-fit: contain; opacity: 1;">
+                        <img src="images/dashboard-tela2.png.png" class="dash-screen" style="position: absolute; width: 100%; height: 100%; object-fit: contain; opacity: 0;">
+                        <img src="images/dashboard-tela3.png.png" class="dash-screen" style="position: absolute; width: 100%; height: 100%; object-fit: contain; opacity: 0;">
+                    </div>
+                    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px;">
+                        <div class="dash-dot"></div><div class="dash-dot"></div><div class="dash-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 14 — IMPLANTAÇÃO -->
+        <section class="slide slide-light" id="slide-14" data-title="Implantação">
+            <div class="grid-bg grid-bg-light"></div>
+            <div class="slide-content-wrapper">
+                <h2 class="title-reveal text-center">No ar em 4 etapas.</h2>
+                <div class="steps-container">
+                    <div class="step-line"><div class="step-line-progress" id="step-progress"></div></div>
+                    <div class="step-item" id="step-1"><div class="step-num">01</div><h3>Mapeamento</h3></div>
+                    <div class="step-item" id="step-2"><div class="step-num">02</div><h3>Integração</h3></div>
+                    <div class="step-item" id="step-3"><div class="step-num">03</div><h3>Calibração</h3></div>
+                    <div class="step-item" id="step-4"><div class="step-num">04</div><h3>Go Live</h3></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 15 — ENCERRAMENTO -->
+        <section class="slide slide-dark" id="slide-15" data-title="Encerramento">
+            <div class="grid-bg grid-bg-dark"></div>
+            <div class="hero-bg-image" style="position: absolute; top: 0; right: 0; bottom: 0; width: 80%; z-index: 0; opacity: 1; -webkit-mask-image: linear-gradient(to left, black 70%, transparent 100%);">
+                <img src="images/Imagem final da apresentação.png" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="slide-content-wrapper" style="align-items: flex-start; padding-left: 8vw;">
+                <img src="images/Logo Principal - Versão Branco - Azul.png" style="height: 45px; margin-bottom: 20px;">
+                <h1>INSTALE A MÁQUINA.</h1>
+                <p class="font-mono" style="color: var(--primary);">Operação 100% no automático.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="ui-overlay">
+        <div class="progress-bar-container"><div class="progress-bar" id="progress-bar"></div></div>
+        <header class="ui-header">
+            <img src="images/Logo Principal - Versão Branco - Azul.png" alt="Máquina.ISP" id="header-logo" style="height: 32px;">
+            <div class="ui-controls">
+                <div class="slide-counter"><span id="current-slide">01</span> / <span id="total-slides">15</span></div>
+                <button class="btn-icon" id="btn-map"><i class="ph ph-squares-four"></i></button>
+            </div>
+        </header>
+        <div class="nav-controls">
+            <div class="nav-btn" id="prev-btn"><i class="ph ph-arrow-left"></i></div>
+            <div class="nav-btn" id="next-btn"><i class="ph ph-arrow-right"></i></div>
+        </div>
+    </div>
+
+    <div id="slide-map" class="slide-map-overlay">
+        <div class="slide-map-header"><h2 style="color: white;">Apresentação | Máquina.ISP</h2><button class="btn-icon" id="btn-close-map"><i class="ph ph-x"></i></button></div>
+        <div class="slide-map-grid" id="slide-map-grid"></div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlideIndex = 0;
+        const totalSlides = slides.length;
+        const currentSlideEl = document.getElementById('current-slide');
+        const totalSlidesEl = document.getElementById('total-slides');
+        const progressBar = document.getElementById('progress-bar');
+        const uiOverlay = document.querySelector('.ui-overlay');
+        const headerLogo = document.getElementById('header-logo');
+        
+        if (totalSlidesEl) totalSlidesEl.textContent = totalSlides.toString().padStart(2, '0');
+
+        function updateSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides.forEach(s => s.classList.remove('active'));
+            const slide = slides[index];
+            slide.classList.add('active');
+            
+            if (slide.classList.contains('slide-light')) { uiOverlay.classList.add('light-mode'); headerLogo.style.filter = 'brightness(0)'; }
+            else { uiOverlay.classList.remove('light-mode'); headerLogo.style.filter = 'none'; }
+            
+            currentSlideIndex = index;
+            currentSlideEl.textContent = (index + 1).toString().padStart(2, '0');
+            progressBar.style.width = ((index + 1) / totalSlides * 100) + '%';
+            animateSlide(index);
+        }
+
+        const WA_AGENTS = {
+            6: { name: 'TEO', messagesId: 'wa-messages-6', statusId: 'wa-status-6', script: [
+                { sender: 'user', text: 'Olá, gostaria de informações sobre os planos.' },
+                { sender: 'bot', text: 'Oi! Aqui é o TEO, assistente comercial. Pra começar, me manda seu CEP?' },
+                { sender: 'user', text: '95010-000.' },
+                { sender: 'bot', text: '✅ Ótima notícia! Temos cobertura fibra premium aí.' }
+            ]},
+            7: { name: 'LIA', messagesId: 'wa-messages-7', statusId: 'wa-status-7', script: [
+                { sender: 'bot', text: 'Oi Fernando! Sua fatura venceu dia 10. Aconteceu algo?' },
+                { sender: 'user', text: 'Esqueci mesmo, esse mês apertou.' },
+                { sender: 'bot', text: 'Sem problema! Posso deslocar pro dia 20 sem multa. Topa?' }
+            ]},
+            8: { name: 'GABI', messagesId: 'wa-messages-8', statusId: 'wa-status-8', script: [
+                { sender: 'user', text: 'GABI, minha internet está oscilando.' },
+                { sender: 'bot', text: 'Oi Juliana! Sinto muito. Desligue o modem por 30s e ligue de novo?' },
+                { sender: 'user', text: 'Fiz mas continua lento.' },
+                { sender: 'bot', text: 'Ok, estou transferindo pro time técnico N2 agora.' }
+            ]},
+            9: { name: 'NOAH', messagesId: 'wa-messages-9', statusId: 'wa-status-9', script: [
+                { sender: 'user', text: 'Quero cancelar meu plano.' },
+                { sender: 'bot', text: 'Oi Roberto! Poxa, você é cliente VIP. O que houve?' },
+                { sender: 'user', text: 'Achei oferta mais barata.' },
+                { sender: 'bot', text: 'Entendi! Posso te dar um upgrade de 300 pra 400 MEGA sem custo extra. Fica com a gente?' }
+            ]}
+        };
+
+        const waState = {};
+        function waAddMsg(area, sender, text) {
+            const div = document.createElement('div');
+            div.className = 'wa-msg ' + sender;
+            div.textContent = text;
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+        }
+
+        function waPlayScript(id) {
+            const agent = WA_AGENTS[id];
+            const area = document.getElementById(agent.messagesId);
+            if (!area) return;
+            area.innerHTML = '';
+            waState[id] = { step: 0, running: true };
+            function next() {
+                const s = waState[id];
+                if (!s || !s.running || s.step >= agent.script.length) return;
+                const msg = agent.script[s.step++];
+                waAddMsg(area, msg.sender, msg.text);
+                setTimeout(next, 2000);
+            }
+            next();
+        }
+
+        function animateSlide(index) {
+            const slide = slides[index];
+            const elements = slide.querySelectorAll('.title-reveal');
+            gsap.fromTo(elements, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 });
+
+            if (index === 1) { gsap.fromTo('#active-flow-path', { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: 2 }); }
+            if (index >= 5 && index <= 8) {
+                const video = slide.querySelector('video');
+                const chat = slide.querySelector('.wa-phone');
+                const right = slide.querySelector('.split-right');
+                gsap.fromTo(right, { opacity: 0 }, { opacity: 1, duration: 0.6 });
+                video.style.opacity = '1'; chat.style.display = 'none';
+                video.play();
+                setTimeout(() => {
+                    gsap.to(video, { opacity: 0, duration: 0.8, onComplete: () => {
+                        video.style.opacity = '0'; chat.style.display = 'block';
+                        waPlayScript(index + 1);
+                    }});
+                }, 4000);
+            }
+            if (index === 9) { // ROI
+                gsap.from('.roi-side', { opacity: 0, scale: 0.9, stagger: 0.3, duration: 0.8 });
+            }
+            if (index === 10) { // Benefícios
+                gsap.fromTo('#circle-benefit-1', { strokeDashoffset: 785 }, { strokeDashoffset: 785 - (785 * 0.3), duration: 2 });
+                gsap.fromTo('#circle-benefit-2', { strokeDashoffset: 785 }, { strokeDashoffset: 785 - (785 * 0.25), duration: 2 });
+                gsap.fromTo('#circle-benefit-3', { strokeDashoffset: 785 }, { strokeDashoffset: 785 - (785 * 0.15), duration: 2 });
+            }
+            if (index === 11) { // Case
+                const rev = { val: 0 }; gsap.to(rev, { val: 88000, duration: 2, onUpdate: () => { document.getElementById('case-revenue').textContent = rev.val.toLocaleString('pt-BR'); } });
+            }
+            if (index === 12) { // Dashboard
+                const screens = slide.querySelectorAll('.dash-screen');
+                let cur = 0; setInterval(() => { screens.forEach(s=>s.style.opacity=0); cur=(cur+1)%3; screens[cur].style.opacity=1; }, 3000);
+            }
+            if (index === 13) { gsap.to('#step-progress', { width: '100%', duration: 2 }); }
+        }
+
+        document.getElementById('next-btn').addEventListener('click', () => updateSlide(currentSlideIndex + 1));
+        document.getElementById('prev-btn').addEventListener('click', () => updateSlide(currentSlideIndex - 1));
+        document.addEventListener('keydown', (e) => { if(e.key === 'ArrowRight') updateSlide(currentSlideIndex + 1); if(e.key === 'ArrowLeft') updateSlide(currentSlideIndex - 1); });
+        updateSlide(0);
+    </script>
+</body>
+</html>
